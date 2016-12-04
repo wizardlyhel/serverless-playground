@@ -1,2 +1,2 @@
 # serverless-playground
-Testing out serverless
+Testing out serverless framework
