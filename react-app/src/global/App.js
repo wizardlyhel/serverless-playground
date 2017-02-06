@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
-import './App.scss';
+import { Router, Route, browserHistory } from 'react-router'
 
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
+import './style/stylesheet.scss';
+
+import Home from '../container/home';
 
 class App extends Component {
     render() {
         return (
-            <div>
-                <h2>Login</h2>
-                <TextField type="email" floatingLabelText="Email"/>
-                <TextField type="password" floatingLabelText="Password"/>
-                <RaisedButton primary={true} label="Login" />
-            </div>
+            <Router history={browserHistory}>
+                <Route path="/" component={Home} />
+            </Router>
         );
     }
 }

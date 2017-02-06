@@ -1,0 +1,396 @@
+// Text
+// ===
+
+// All Caps
+// ---
+//
+// Set text uppercase, letterspaced for legibility.
+
+@mixin text-all-caps($important: false) {
+    @if($important) {
+        letter-spacing: 1px !important;
+        text-transform: uppercase !important;
+    } @else {
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+}
+
+
+// Capitalize Text
+// ---
+//
+// Capitalize first letter of string.
+
+@mixin text-capitalize($important: false) {
+    @if($important) {
+        text-transform: capitalize !important;
+    } @else {
+        text-transform: capitalize;
+    }
+}
+
+
+// Lowercase Text
+// ---
+//
+// Lowercase all text in string.
+
+@mixin text-lowercase($important: false) {
+    @if($important) {
+        text-transform: lowercase !important;
+    } @else {
+        text-transform: lowercase;
+    }
+}
+
+
+// Text Flow Alignment
+// ---
+//
+// Writing-direction independent text alignment. For RTL stylesheets, re-define
+// these styles with the opposite direction. Templates need not be changed.
+
+@mixin text-align-start($important: false) {
+    @if($important) {
+        text-align: left !important;
+    } @else {
+        text-align: left;
+    }
+}
+
+@mixin text-align-center($important: false) {
+    @if($important) {
+        text-align: center !important;
+    } @else {
+        text-align: center;
+    }
+}
+
+@mixin text-align-end($important: false) {
+    @if($important) {
+        text-align: right !important;
+    } @else {
+        text-align: right;
+    }
+}
+
+
+// Vertical Alignment
+// ---
+//
+// Vertical aligment of text and replaced (inline-block) elements within a line.
+
+@mixin align-middle($important: false) {
+    @if($important) {
+        vertical-align: middle !important;
+    } @else {
+        vertical-align: middle;
+    }
+}
+
+@mixin align-baseline($important: false) {
+    @if($important) {
+        vertical-align: baseline !important;
+    } @else {
+        vertical-align: baseline;
+    }
+}
+
+
+// Weights & Style
+// ---
+
+@mixin text-normal($important: false) {
+    @if($important) {
+        font-weight: normal !important;
+        @if(true) {
+            // get around `no-duplicate-properties` lint error
+            font-weight: 400 !important;
+        }
+    } @else {
+        font-weight: normal;
+        @if(true) {
+            // get around `no-duplicate-properties` lint error
+            font-weight: 400;
+        }
+    }
+}
+
+@mixin text-bold($important: false) {
+    @if($important) {
+        font-weight: bold !important;
+        @if(true) {
+            // get around `no-duplicate-properties` lint error
+            font-weight: 700 !important;
+        }
+    } @else {
+        font-weight: bold;
+        @if(true) {
+            // get around `no-duplicate-properties` lint error
+            font-weight: 700;
+        }
+    }
+}
+
+@mixin text-italic($important: false) {
+    @if($important) {
+        font-style: italic !important;
+    } @else {
+        font-style: italic;
+    }
+}
+
+@mixin text-quiet(
+    $important: false,
+    $color: if(variable-exists(neutral-50), $neutral-50, null)
+) {
+    @if($important) {
+        color: $color !important;
+        font-size: 0.785em !important;
+
+        fill: $color !important;
+    } @else {
+        color: $color;
+        font-size: 0.785em;
+
+        fill: $color;
+    }
+}
+
+
+// Text utils
+// ===
+
+// All Caps
+// ---
+//
+// Set text uppercase, letterspaced for legibility.
+
+.u-text-all-caps {
+    @include text-all-caps(true);
+}
+
+
+// Uppercase Text
+// ---
+
+.u-text-uppercase {
+    text-transform: uppercase !important;
+}
+
+
+// Capitalize Text
+// ---
+//
+// Capitalize first letter of string.
+
+.u-text-capitalize {
+    @include text-capitalize(true);
+}
+
+
+// Lowercase Text
+// ---
+//
+// Lowercase all text in string.
+
+.u-text-lowercase {
+    @include text-lowercase(true);
+}
+
+
+// Inherit Text
+// ---
+//
+// Lowercase all text in string.
+
+.u-text-transform-inherit {
+    text-transform: inherit !important;
+}
+
+
+// Text Flow Alignment
+// ---
+//
+// Writing-direction independent text alignment. For RTL stylesheets, re-define
+// these styles with the opposite direction. Templates need not be changed.
+
+.u-text-align-start {
+    @include text-align-start(true);
+}
+
+.u-text-align-center {
+    @include text-align-center(true);
+}
+
+.u-text-align-end {
+    @include text-align-end(true);
+}
+
+
+// Vertical Alignment
+// ---
+//
+// Vertical aligment of text and replaced (inline-block) elements within a line.
+
+.u-align-middle {
+    @include align-middle(true);
+}
+
+.u-align-baseline {
+    @include align-baseline(true);
+}
+
+
+// Weights & Style
+// ---
+
+.u-text-normal {
+    @include text-normal(true);
+}
+
+.u-text-bold {
+    @include text-bold(true);
+}
+
+.u-text-italic {
+    @include text-italic(true);
+}
+
+.u-text-quiet {
+    @include text-quiet(true);
+}
+
+.u-text-light {
+    font-weight: $light-font-weight !important;
+}
+
+
+// Text Sizes
+// ---
+
+.u-text-size-smaller {
+    font-size: $smaller-font-size !important;
+}
+
+.u-text-size-small {
+    font-size: $small-font-size !important;
+}
+
+.u-text-size-normal {
+    font-size: $font-size !important;
+}
+
+.u-text-size-big {
+    font-size: $big-font-size !important;
+}
+
+.u-text-size-bigger {
+    font-size: $bigger-font-size !important;
+}
+
+.u-text-size-huge {
+    font-size: $huge-font-size !important;
+}
+
+.u-text-size-giant {
+    font-size: $giant-font-size !important;
+}
+
+
+// Text underline
+// ---
+
+.u-text-underline {
+    text-decoration: underline !important;
+}
+
+
+// Font family
+// ---
+
+.u-font-family-system {
+    font-family: $system-font !important;
+}
+
+.u-font-family-garamond-pro {
+    font-family: $garamond-pro !important;
+}
+
+
+// Truncate
+// ---
+//
+// 1. Fallback for non-webkit
+
+.u-truncate {
+    overflow: hidden;
+    max-width: 100%;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.u-no-wrap {
+    white-space: nowrap;
+}
+
+.u-text-clamp-2,
+.u-text-clamp-3 {
+    display: -webkit-box; // 3
+    overflow: hidden; // 3
+
+    text-overflow: ellipsis; // 3
+
+    -webkit-box-orient: vertical; // 3
+}
+
+.u-text-clamp-2 {
+    -webkit-line-clamp: 2; // 3
+}
+
+.u-text-clamp-3 {
+    -webkit-line-clamp: 3; // 3
+}
+
+
+// Letter spacing
+// ---
+
+.u-letter-spacing-loose {
+    letter-spacing: $loose-letter-spacing !important;
+}
+
+.u-letter-spacing-0 {
+    letter-spacing: 0 !important;
+}
+
+
+// Word Break
+// ---
+
+.u-work-break-all {
+    word-break: break-all !important;
+}
+
+
+// Leading / Line-Height
+// ---
+//
+// lead [rhyming with `said`]:
+// Originally a strip of soft metal used for vertical spacing between lines of
+// type. Now meaning the vertical distance from the baseline of one line to the
+// baseline of the next.
+
+.u-leading-reset {
+    line-height: 1 !important;
+}
+
+.u-leading-default {
+    line-height: $line-height !important;
+}
+
+.u-leading-loose {
+    line-height: $line-height * 1.15 !important;
+}
