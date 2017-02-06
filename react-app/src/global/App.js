@@ -3,14 +3,23 @@ import { Router, Route, browserHistory } from 'react-router'
 
 import './style/stylesheet.scss';
 
+import Login from '../components/login';
 import Home from '../container/home';
 
 class App extends Component {
     render() {
         return (
-            <Router history={browserHistory}>
-                <Route path="/" component={Home} />
-            </Router>
+            <div>
+                <p>header</p>
+                
+                <Router history={browserHistory}>
+                    <Route path="/" component={Home} />
+                </Router>
+
+                <Login />
+
+                <p>footer</p>
+            </div>
         );
     }
 }

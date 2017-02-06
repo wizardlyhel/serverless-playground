@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import {connect} from 'react-redux'
 
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
@@ -11,6 +12,10 @@ const customContentStyle = {
 
 class Login extends Component {
     render() {
+        const {
+            intl
+        } = this.props
+
         return (
             <Dialog
                 modal={false}
@@ -24,7 +29,7 @@ class Login extends Component {
                         <TextField type="email" floatingLabelText="Email" fullWidth={true} />
                         <TextField type="password" floatingLabelText="Password" fullWidth={true} />
                         <div className="u-padding-top-lg">
-                            <RaisedButton primary={true} label="Login" fullWidth={true} />
+                            <RaisedButton primary={true} label={intl.messages['login']} fullWidth={true} />
                         </div>
                     </div>
                 </div>
@@ -33,4 +38,19 @@ class Login extends Component {
     }
 }
 
-export default Login;
+Login.propTypes = {
+    /**
+     * react-intl
+     */
+    intl: PropTypes.object.isRequired
+}
+
+export const mapStateToProps = (state, props) => {
+    return {
+        intl: state.intl
+    }
+}
+
+export default connect(
+    mapStateToProps
+)(Login)

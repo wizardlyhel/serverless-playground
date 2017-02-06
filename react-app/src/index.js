@@ -15,7 +15,6 @@ addLocaleData([...en, ...zh])
 
 import App from './global/App';
 import rootReducer from './reducer';
-import './index.scss';
 
 const locale = 'en'
 const initialState = {
@@ -40,7 +39,7 @@ const muiTheme = getMuiTheme({
 
 injectTapEventPlugin();
 
-const Root = ({ store }) => (
+const Root = () => (
     <Provider store={store}>
         <MuiThemeProvider muiTheme={muiTheme}>
             <App />
@@ -49,6 +48,6 @@ const Root = ({ store }) => (
 );
 
 ReactDOM.render(
-  <Root store={store}/>,
+  <Root />,
   document.getElementById('root')
 );
