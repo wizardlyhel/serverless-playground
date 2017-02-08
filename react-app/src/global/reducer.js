@@ -1,15 +1,19 @@
 import { createReducer } from 'redux-act';
-import { createAction, mergeDeep } from './utils';
+import { mergeDeep } from './utils';
 import {Map, List} from 'immutable'
 
-const initialState = Map({
-    locale: 'en'
-})
+import { appActions } from './actions'
 
-// Actions
-export const setLocal = createAction('Set locale', 'locale')
+const initialState = Map({
+    loggedIn: false
+})
 
 // Reducers
 export default createReducer({
-	[setLocal]: mergeDeep
+	[appActions.loginSuccess]: (state) => {
+		return state.set('loggedIn', true)
+	},
+	[appActions.loginFailed]: (state) => {
+		return state.set('loggedIn', false)
+	}
 }, initialState)

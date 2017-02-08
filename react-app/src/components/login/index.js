@@ -1,15 +1,17 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react'
 import {connect} from 'react-redux'
 import classNames from 'classnames'
 
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
+import Dialog from 'material-ui/Dialog'
+import TextField from 'material-ui/TextField'
+import RaisedButton from 'material-ui/RaisedButton'
+
+import { authentication } from '../../global/actions/authentication'
 
 const customContentStyle = {
     width: '90%',
     maxWidth: '400px'
-};
+}
 
 const LoginForm = ({intl, containerClasses}) => (
     <div className="pure-g u-text-align-center">
@@ -30,7 +32,8 @@ class Login extends Component {
     render() {
         const {
             intl,
-            showInDialog
+            showInDialog,
+            submitLogin
         } = this.props
 
         const containerClasses = classNames({
@@ -53,7 +56,7 @@ class Login extends Component {
                     <LoginForm intl={intl} containerClasses={containerClasses} />
             }
             </div>
-        );
+        )
     }
 }
 
@@ -69,7 +72,11 @@ Login.propTypes = {
     /**
      *  Wrap login form in a dialog
      */
-    showInDialog: PropTypes.bool
+    showInDialog: PropTypes.bool,
+    /**
+     *  Login form submit handler
+     */
+    submitLogin:PropTypes.func
 }
 
 export const mapStateToProps = (state, props) => {
@@ -78,6 +85,13 @@ export const mapStateToProps = (state, props) => {
     }
 }
 
+export const mapDispatchToProps = (dispatch, props) => {
+    return {
+        submitLogin: (username, password) => dispatch(authentication.login(username, password))
+    }
+}
+
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Login)

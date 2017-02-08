@@ -48,6 +48,8 @@
     "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
+    "amazon-cognito-identity-js": "^1.12.0",
+    "aws-sdk": "^2.10.0",
     "classnames": "^2.2.5",
     "immutable": "^3.8.1",
     "material-ui": "^0.16.7",
