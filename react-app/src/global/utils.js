@@ -40,12 +40,12 @@ export const createAction = (description, promise, meta) => {
 
     return actionCreator
 }
-
+ 
 // Convient function to create reducers for redux-pack
 // Usage:
 //
 // const login = createAction('Login', loginPromse)
-// const signup = createAction('Sign up', loginPromse)
+// const signup = createAction('Sign up', signInPromse)
 //
 // createReducers({
 //     login: {
