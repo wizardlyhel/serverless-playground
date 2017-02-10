@@ -1,5 +1,12 @@
 import { createAction } from './utils';
+import { login as loginPromise } from './actions/authentication'
 
 // Actions
-export const loginSuccess = createAction('Login Success')
-export const loginFailed = createAction('Login Failed')
+export const login = createAction('Login', loginPromise, {
+    onSuccess: (result, getState) => {
+    	console.log('Action success', result)
+    },
+    onFailure: (result, getState) => {
+    	console.log('Action failed', result)
+    }
+})

@@ -1,7 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-intl-redux'
-import { createStore, compose } from 'redux'
+import { createStore, compose, applyMiddleware } from 'redux'
+import { middleware as reduxPackMiddleware } from 'redux-pack'
+import thunk from 'redux-thunk'
+import createLogger from 'redux-logger'
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -24,10 +27,12 @@ const initialState = {
     messages: translations[locale]
   }
 }
+const logger = createLogger()
 
 let store = createStore(
     rootReducer,
     initialState,
+    applyMiddleware(thunk, reduxPackMiddleware, logger),
     compose(
         window.devToolsExtension ? window.devToolsExtension() : (f) => f
     )
