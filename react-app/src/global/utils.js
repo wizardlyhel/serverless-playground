@@ -1,5 +1,4 @@
 import { handle } from 'redux-pack';
-import isString from 'lodash/isString';
 
 export const mergeDeep = (state, payload) => {
     return state.mergeDeep({
