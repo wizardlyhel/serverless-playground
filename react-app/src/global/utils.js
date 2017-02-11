@@ -92,7 +92,7 @@ export const createReducers = (handlers, initialState) => {
         const { type } = action;
 
         if (handlers.hasOwnProperty(type)) {
-            if (!isFunction(handlers[type])) {}
+            if (!isFunction(handlers[type])) {
                 let handler = handlers[type]
 
                 while (!(handler.start || handler.success || handler.failure || handler.finish || handler.always)) {
