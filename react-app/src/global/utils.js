@@ -1,4 +1,5 @@
 import { handle } from 'redux-pack';
+import isString from 'lodash/isString';
 
 export const mergeDeep = (state, payload) => {
     return state.mergeDeep({
@@ -45,9 +46,13 @@ export const createAction = (description, promise, meta) => {
 // Usage:
 //
 // const login = createAction('Login', loginPromse)
+// const loginV2 = createAction('Login V2', loginPromse)
+// const loginV3 = createAction('Login V2', loginPromse)
 // const signup = createAction('Sign up', signInPromse)
 //
 // createReducers({
+//     loginV2: login,
+//     loginV3: login,
 //     login: {
 //         start: state => { return state },
 //         success: state => { return state },
@@ -69,8 +74,15 @@ export const createAction = (description, promise, meta) => {
 export const createReducers = (handlers, initialState) => {
     return (state = initialState, action) => {
         const { type } = action;
+
         if (handlers.hasOwnProperty(type)) {
-            return handle(state, action, handlers[type])
+            let handler = handlers[type]
+
+            while (!(handler.start || handler.success || handler.failure || handler.finish || handler.always)) {
+                handler = handlers[handler]
+            }
+
+            return handle(state, action, handler)
         } else {
             return state
         }

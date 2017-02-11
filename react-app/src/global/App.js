@@ -7,11 +7,14 @@ import './style/stylesheet.scss';
 import Login from '../components/login';
 import Home from '../container/home';
 
-import {login} from './actions';
+import {login, loginV2, loginV3, loginForm} from './actions';
 
 class App extends Component {
     componentDidMount() {
-        this.props.loginUser('user', 'pass');
+        this.props.loginUser1('user1', 'pass');
+        this.props.loginUser2('user2', 'pass');
+        this.props.loginUser3('user3', 'pass');
+        this.props.loginUser4('user4', 'pass');
     }
 
     render() {
@@ -39,7 +42,10 @@ App.propTypes = {
     /**
      *  Login form submit handler
      */
-    loginUser:PropTypes.func
+    loginUser1:PropTypes.func,
+    loginUser2:PropTypes.func,
+    loginUser3:PropTypes.func,
+    loginUser4:PropTypes.func
 }
 
 export const mapStateToProps = (state, props) => {
@@ -50,7 +56,10 @@ export const mapStateToProps = (state, props) => {
 
 export const mapDispatchToProps = (dispatch, props) => {
     return {
-        loginUser: (user, pass) => dispatch(login(user, pass))
+        loginUser1: (user, pass) => dispatch(login(user, pass)),
+        loginUser2: (user, pass) => dispatch(loginV2(user, pass)),
+        loginUser3: (user, pass) => dispatch(loginV3(user, pass)),
+        loginUser4: (user, pass) => dispatch(loginForm(user, pass))
     }
 }
 
