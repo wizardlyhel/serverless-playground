@@ -30,11 +30,9 @@ export const mergeDeep = (state, payload) => {
 //
 // createAction('Close', {arg: 'arg 1'})
 //
-// description      Action identifier
-// payload          A promise handler or payload
-// meta             Side effect functions (optional)
-//
-// Reducer with the same action identifier will update app state
+// description      [String]            Action identifier
+// payload          [Promise | Object]  A promise handler or payload
+// initalMeta       [Object]            Side effect functions (optional)
 export const createAction = (description, payload, initMeta) => {
     let actionCreator
     let initPayload = {
@@ -99,8 +97,8 @@ export const createAction = (description, payload, initMeta) => {
 //     'Default': mergeDeep                     <== Function follows (state [, payload]) => { return state }
 // }, initialState)
 //
-// handlers         Reducer handlers
-// initialState
+// handlers         [Object]    Reducer handlers
+// initialState     [Object]    Initial state
 export const createReducers = (handlers, initialState) => {
     return (state = initialState, action) => {
         const { type, payload } = action;
