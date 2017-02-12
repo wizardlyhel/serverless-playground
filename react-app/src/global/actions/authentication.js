@@ -68,12 +68,6 @@ export const loginPromise2 = (user, pass) => {
 	})
 }
 
-export const loginPromise3 = (user, pass) => {
-	return new Promise((resolve, reject) => {
-		resolve('Login success - ' + user) // resolve with states you want to update
-	})
-}
-
 export const loginPromise4 = (user, pass) => {
 	return new Promise((resolve, reject) => {
 		resolve('Login success - ' + user) // resolve with states you want to update

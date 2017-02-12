@@ -29,12 +29,12 @@ const initialState = {
 }
 const logger = createLogger()
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 let store = createStore(
     rootReducer,
     initialState,
-    applyMiddleware(thunk, reduxPackMiddleware, logger),
-    compose(
-        window.devToolsExtension ? window.devToolsExtension() : (f) => f
+    composeEnhancers(
+        applyMiddleware(thunk, reduxPackMiddleware, logger)
     )
 )
 

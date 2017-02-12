@@ -3,9 +3,6 @@ import { loginPromise1, loginPromise2, loginPromise4 } from './actions/authentic
 
 // Actions
 export const login = createAction('Login', loginPromise1, {
-	onStart: (result, getState) => {
-    	console.log('Action start', result)
-    },
     onSuccess: (result, getState) => {
     	console.log('Action success', result)
     },
@@ -15,9 +12,6 @@ export const login = createAction('Login', loginPromise1, {
 })
 
 export const loginV2 = createAction('Login V2', loginPromise2, {
-	onStart: (result, getState) => {
-    	console.log('Action start', result)
-    },
     onSuccess: (result, getState) => {
     	console.log('Action success', result)
     },
@@ -29,9 +23,6 @@ export const loginV2 = createAction('Login V2', loginPromise2, {
 export const loginV3 = createAction('Login V3', null, {actionMeta: true})
 
 export const loginForm = createAction('Login Form', loginPromise4, {
-	onStart: (result, getState) => {
-    	console.log('Action start', result)
-    },
     onSuccess: (result, getState) => {
     	console.log('Action success', result)
     },
