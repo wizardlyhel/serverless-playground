@@ -19,6 +19,7 @@ addLocaleData([...en, ...zh])
 import App from './global/App';
 import rootReducer from './reducer';
 
+// Internationalization
 const locale = 'en'
 const initialState = {
   intl: {
@@ -27,9 +28,12 @@ const initialState = {
     messages: translations[locale]
   }
 }
-const logger = createLogger()
 
+// Dev tools
+const logger = createLogger()
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+// Store
 let store = createStore(
     rootReducer,
     initialState,
@@ -38,6 +42,7 @@ let store = createStore(
     )
 )
 
+// Theme
 const muiTheme = getMuiTheme({
   userAgent: window.navigator.userAgent
 });
