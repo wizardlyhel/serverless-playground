@@ -58,7 +58,7 @@ export const mapDispatchToProps = (dispatch, props) => {
     return {
         loginUser1: (user, pass) => dispatch(login(user, pass)),
         loginUser2: (user, pass) => dispatch(loginV2(user, pass)),
-        loginUser3: (user, pass) => dispatch(loginV3(user, pass)),
+        loginUser3: (payload, meta) => dispatch(loginV3(payload, meta)),
         loginUser4: (user, pass) => dispatch(loginForm(user, pass))
     }
 }

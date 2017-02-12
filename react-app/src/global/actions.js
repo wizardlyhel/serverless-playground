@@ -26,7 +26,7 @@ export const loginV2 = createAction('Login V2', loginPromise2, {
     }
 })
 
-export const loginV3 = createAction('Login V3', 'payload', {actionMeta: true})
+export const loginV3 = createAction('Login V3', null, {actionMeta: true})
 
 export const loginForm = createAction('Login Form', loginPromise4, {
 	onStart: (result, getState) => {

@@ -28,19 +28,21 @@ export const mergeDeep = (state, payload) => {
 //
 // Usage: Create an action (FSA)
 //
-// createAction('Close', {arg: 'arg 1'})
+// const close = createAction('Close')
+//
+// dispatch(close({arg: 'arg 1'}))
 //
 // description      [String]            Action identifier
 // payload          [Promise | Object]  A promise handler or payload
 // initalMeta       [Object]            Side effect functions (optional)
-export const createAction = (description, payload, initMeta) => {
+export const createAction = (description, payload = 'payload', initMeta) => {
     let actionCreator
     let initPayload = {
         type: description,
         meta: initMeta
     }
 
-    if (isString(payload)) {
+    if (!payload || isString(payload)) {
         actionCreator = (args, meta) => {
             invariant(isPlainObject(args), deline`
                 The ${initPayload.type} action is expected a plain object as first argument.
@@ -94,7 +96,7 @@ export const createAction = (description, payload, initMeta) => {
 //         finish: state => { return state },
 //         always: state => { return state }
 //     },
-//     'Default': mergeDeep                     <== Function follows (state [, payload]) => { return state }
+//     Default: mergeDeep                       <== Function follows (state [, payload]) => { return state }
 // }, initialState)
 //
 // handlers         [Object]    Reducer handlers
