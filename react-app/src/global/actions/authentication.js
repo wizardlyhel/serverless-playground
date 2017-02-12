@@ -57,25 +57,25 @@
 // }
 
 export const loginPromise1 = (user, pass) => {
-	return new Promise(function(resolve, reject) {
+	return new Promise((resolve, reject) => {
 		resolve('Login success - ' + user) // resolve with states you want to update
 	})
 }
 
 export const loginPromise2 = (user, pass) => {
-	return new Promise(function(resolve, reject) {
+	return new Promise((resolve, reject) => {
 		resolve('Login success - ' + user) // resolve with states you want to update
 	})
 }
 
 export const loginPromise3 = (user, pass) => {
-	return new Promise(function(resolve, reject) {
+	return new Promise((resolve, reject) => {
 		resolve('Login success - ' + user) // resolve with states you want to update
 	})
 }
 
 export const loginPromise4 = (user, pass) => {
-	return new Promise(function(resolve, reject) {
+	return new Promise((resolve, reject) => {
 		resolve('Login success - ' + user) // resolve with states you want to update
 	})
 }

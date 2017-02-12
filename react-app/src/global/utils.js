@@ -11,12 +11,13 @@ export const mergeDeep = (state, payload) => {
     })
 }
 
-// Convinent function to create actions and argument reducer for redux-pack
-// Usage:
+// Convinent function to create actions
 //
-// login = (user, pass) => { return a promise }
+// Usage: Create a promisified action
 //
-// createAction('Login', loginPromse, {
+// login = (user, pass) => { return new Promise((resolve, reject) => { resolve(true) } }
+//
+// createAction('Login', login, {
 //     onStart: (result, getState) => {},
 //     onFinish: (result, getState) => {},
 //     onSuccess: (result, getState) => {},
@@ -25,7 +26,9 @@ export const mergeDeep = (state, payload) => {
 //
 // dispatch(login('user', 'pass'))
 //
-// Created action function can be use to identify reducer as well
+// Usage: Create an action (FSA)
+//
+// createAction('Close', {arg: 'arg 1'})
 //
 // description      Action identifier
 // payload          A promise handler or payload
@@ -68,7 +71,7 @@ export const createAction = (description, payload, initMeta) => {
     return actionCreator
 }
  
-// Convient function to create reducers for redux-pack
+// Convient function to create reducers
 // Usage:
 //
 // const login = createAction('Login', loginPromse)
@@ -77,8 +80,8 @@ export const createAction = (description, payload, initMeta) => {
 // const signup = createAction('Sign up', signInPromse)
 //
 // createReducers({
-//     loginV2: login,
-//     loginV3: 'Default',
+//     loginV2: login,                          <== Reducer redirect to Login reducer
+//     loginV3: 'Default',                      <== Reducer redirect to Default reducer
 //     login: {
 //         start: state => { return state },
 //         success: state => { return state },
@@ -86,14 +89,14 @@ export const createAction = (description, payload, initMeta) => {
 //         finish: state => { return state },
 //         always: state => { return state }
 //     },
-//     signup: {
+//     signup: {                                <== Promise reducers
 //         start: state => { return state },
 //         success: state => { return state },
 //         failure: state => { return state },
 //         finish: state => { return state },
 //         always: state => { return state }
 //     },
-//     'Default': mergeDeep
+//     'Default': mergeDeep                     <== Function follows (state [, payload]) => { return state }
 // }, initialState)
 //
 // handlers         Reducer handlers
