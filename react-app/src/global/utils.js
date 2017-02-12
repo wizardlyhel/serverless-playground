@@ -1,4 +1,7 @@
+import deline from 'deline';
+import invariant from 'invariant';
 import { handle } from 'redux-pack';
+import isString from 'lodash/isString';
 import isFunction from 'lodash/isFunction';
 import isPlainObject from 'lodash/isPlainObject';
 
@@ -29,18 +32,26 @@ export const mergeDeep = (state, payload) => {
 // meta             Side effect functions (optional)
 //
 // Reducer with the same action identifier will update app state
-export const createAction = (description, payload, meta) => {
+export const createAction = (description, payload, initMeta) => {
     let actionCreator
     let initPayload = {
         type: description,
-        meta
+        meta: initMeta
     }
 
-    if (isPlainObject(payload)) {
-        actionCreator = (...args) => {
+    if (isString(payload)) {
+        actionCreator = (args, meta) => {
+            invariant(isPlainObject(args), deline`
+                The ${initPayload.type} action is expected a plain object as first argument.
+            `);
+
             return {
-                ...initPayload,
-                payload
+                type: initPayload.type,
+                payload: args,
+                meta: {
+                    ...initPayload.meta,
+                    ...meta
+                }
             }
         }
     } else {
@@ -89,19 +100,27 @@ export const createAction = (description, payload, meta) => {
 // initialState
 export const createReducers = (handlers, initialState) => {
     return (state = initialState, action) => {
-        const { type } = action;
+        const { type, payload } = action;
 
         if (handlers.hasOwnProperty(type)) {
-            if (!isFunction(handlers[type])) {
-                let handler = handlers[type]
+            let handler = handlers[type]
+            let isPromiseHandler = isPlainObject(handler)
 
-                while (!(handler.start || handler.success || handler.failure || handler.finish || handler.always)) {
-                    handler = handlers[handler]
+            while (!isPromiseHandler) {
+                const testHandler = handlers[handler]
+                
+                if (!testHandler) {
+                    break;
                 }
 
+                handler = testHandler
+                isPromiseHandler = isPlainObject(handler)
+            }
+
+            if (isPromiseHandler) {
                 return handle(state, action, handler)
             } else {
-                return handlers(state, action)
+                return handler(state, payload)
             } 
         } else {
             return state

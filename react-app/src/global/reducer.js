@@ -10,7 +10,7 @@ const initialState = Map({
 // Reducers
 export default createReducers({
     [appActions.loginV2]: appActions.login,
-    [appActions.loginV3]: appActions.login,
+    [appActions.loginV3]: 'Default',
     [appActions.login]: {
         failure: (state, payload) => {
             console.log('Reducer failure', payload);
@@ -30,5 +30,6 @@ export default createReducers({
             console.log('Reducer success', payload);
             return state
         }
-    }
+    },
+    Default : mergeDeep
 }, initialState)

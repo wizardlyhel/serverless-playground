@@ -13,7 +13,7 @@ class App extends Component {
     componentDidMount() {
         this.props.loginUser1('user1', 'pass');
         this.props.loginUser2('user2', 'pass');
-        this.props.loginUser3('user3', 'pass');
+        this.props.loginUser3({token: 'ABC'}, {appMeta: true});
         this.props.loginUser4('user4', 'pass');
     }
 
