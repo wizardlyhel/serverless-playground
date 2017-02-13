@@ -64,6 +64,7 @@
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-act": "^1.1.0",
+    "redux-form": "^6.5.0",
     "redux-intl": "^1.0.1",
     "redux-logger": "^2.8.1",
     "redux-pack": "^0.1.4",

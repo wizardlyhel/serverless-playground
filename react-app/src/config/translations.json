@@ -1,6 +1,12 @@
 {
 	"en": {
-		"login": "Login"
+		"companyName": "Aventine",
+
+		"auth.emailLabel": "Email",
+		"auth.passwordLabel": "Password",
+		"auth.confirmPasswordLabel": "Confirm Your Password",
+		"auth.signInButton": "Login",
+		"auth.signUpButton": "Create Account"
 	},
 	"zh": {
 		"login": "Chinese Login"

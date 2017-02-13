@@ -1,10 +1,10 @@
 import { mergeDeep, createReducers } from './utils';
 import { Map, List } from 'immutable'
 
-import * as appActions from './actions'
+import * as appActions from './actions/'
 
 const initialState = Map({
-    loggedIn: false
+    authenticated: false
 })
 
 // Reducers

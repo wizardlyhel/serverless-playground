@@ -1,9 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import {connect} from 'react-redux'
-import { Link } from 'react-router'
 import classNames from 'classnames'
 
-import Divider from 'material-ui/Divider';
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 
@@ -28,14 +26,9 @@ class Login extends Component {
                     <div className="u-padding-lg">
                         <TextField type="email" floatingLabelText={intl.messages['auth.emailLabel']} fullWidth={true} />
                         <TextField type="password" floatingLabelText={intl.messages['auth.passwordLabel']} fullWidth={true} />
+                        <TextField type="password" floatingLabelText={intl.messages['auth.confirmPasswordLabel']} fullWidth={true} />
                         <div className="u-padding-top-lg">
-                            <RaisedButton primary={true} label={intl.messages['auth.signInButton']} fullWidth={true} />
-                        </div>
-                        <Divider />
-                        <div className="u-padding-top-lg">
-                            <Link to="/register">
-                                <RaisedButton primary={true} label={intl.messages['auth.signUpButton']} fullWidth={true} />
-                            </Link>
+                            <RaisedButton primary={true} label={intl.messages['auth.signUpButton']} fullWidth={true} />
                         </div>
                     </div>
                 </div>
@@ -44,23 +37,15 @@ class Login extends Component {
     }
 }
 
-Login.defaultProps = {
-    showInDialog: false
-}
-
 Login.propTypes = {
     /**
      * react-intl
      */
     intl: PropTypes.object.isRequired,
     /**
-     *  Wrap login form in a dialog
+     *  Signup form submit handler
      */
-    showInDialog: PropTypes.bool,
-    /**
-     *  Login form submit handler
-     */
-    submitLogin:PropTypes.func
+    signup:PropTypes.func
 }
 
 export const mapStateToProps = (state, props) => {
@@ -71,7 +56,7 @@ export const mapStateToProps = (state, props) => {
 
 export const mapDispatchToProps = (dispatch, props) => {
     return {
-        submitLogin: (username, password) => dispatch(authentication.login(username, password))
+        sigup: (username, password) => dispatch(authentication.signup(username, password))
     }
 }
 

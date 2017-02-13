@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux'
 import {intlReducer} from 'react-intl-redux'
 
-import appReducer from './global/reducer'
+import app from './global/reducer'
 
 const rootReducer = combineReducers({
-    appReducer,
+    app,
     intl: intlReducer
 })
 
