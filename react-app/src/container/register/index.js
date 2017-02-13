@@ -9,7 +9,7 @@ import {
 } from 'redux-form-material-ui'
 import * as formValidationRules from '../../utils/form-validation'
 
-import { userSignup } from '../../global/actions/authentication'
+import { signUp } from '../../global/actions/'
 
 class Register extends Component {
     render() {
@@ -18,6 +18,7 @@ class Register extends Component {
             showInDialog,
             submitForm,
 
+            handleSubmit,
             pristine,
             submitting,
             invalid
@@ -32,7 +33,7 @@ class Register extends Component {
             <div className="pure-g u-text-align-center">
                 <div className={containerClasses}>
                     <div className="u-padding-lg">
-                        <form onSubmit={submitForm}>
+                        <form noValidate={true} onSubmit={handleSubmit(submitForm)}>
                             <Field component={TextField}
                                 name="email" type="email"
                                 floatingLabelText={intl.messages['auth.emailLabel']}
@@ -95,7 +96,7 @@ export const mapStateToProps = (state, props) => {
 
 export const mapDispatchToProps = (dispatch, props) => {
     return {
-        submitForm: (values) => dispatch(userSignup(values))
+        submitForm: (values) => dispatch(signUp(values))
     }
 }
 
