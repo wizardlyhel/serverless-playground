@@ -41,7 +41,7 @@ class Register extends Component {
                                 validate={[formValidationRules.required, formValidationRules.email]}
                             />
                             <Field component={TextField}
-                                name ="password" type="password"
+                                name="password" type="password"
                                 floatingLabelText={intl.messages['auth.passwordLabel']}
                                 fullWidth={true}
                                 validate={[

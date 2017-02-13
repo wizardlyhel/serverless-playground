@@ -34,7 +34,7 @@ const cognitoUserAttribute = (name, value) => {
     })
 }
 
-export const userSignup = (formInputs) => {
+export const userSignUp = (formInputs) => {
     return new Promise((resolve, reject) => {
         const attributeList = [
             cognitoUserAttribute('email', formInputs.email)
@@ -44,13 +44,14 @@ export const userSignup = (formInputs) => {
             if (err) {
                 return reject(awsCognitoErrorCodeMapping(err))
             }
-            debugger;
-            return resolve()
+            return resolve({
+                cognitoUser: result.user
+            })
         })
     })
 }
 
-export const userLogin = (formInput) => {
+export const userSignIn = (formInput) => {
     return new Promise((resolve, reject) => {
         const authenticationDetails = new AuthenticationDetails({
             Username: formInput.email,

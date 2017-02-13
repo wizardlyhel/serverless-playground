@@ -1,8 +1,8 @@
 import { createAction } from '../../utils/redux';
-import { userSignup, userLogin } from './authentication'
+import { userSignUp, userSignIn } from './authentication'
 
 // Actions
-export const signUp = createAction('Sign up', userSignup, {
+export const signUp = createAction('Sign up', userSignUp, {
     onSuccess: (result, getState) => {
     	console.log('Action success', result)
     },
@@ -11,7 +11,7 @@ export const signUp = createAction('Sign up', userSignup, {
     }
 })
 
-export const login = createAction('Login', userLogin, {
+export const signIn = createAction('Sign in', userSignIn, {
     onSuccess: (result, getState) => {
     	console.log('Action success', result)
     },
@@ -19,3 +19,5 @@ export const login = createAction('Login', userLogin, {
     	console.log('Action failed', result)
     }
 })
+
+export const signOut = createAction('Sign out')

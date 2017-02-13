@@ -2,7 +2,6 @@ import deline from 'deline';
 import invariant from 'invariant';
 import { handle } from 'redux-pack';
 import isString from 'lodash/isString';
-import isFunction from 'lodash/isFunction';
 import isPlainObject from 'lodash/isPlainObject';
 
 export const mergeDeep = (state, payload) => {
@@ -83,18 +82,18 @@ export const createAction = (description, payload = 'payload', initMeta) => {
 //     loginV2: login,                          <== Reducer redirect to Login reducer
 //     loginV3: 'Default',                      <== Reducer redirect to Default reducer
 //     login: {
-//         start: state => { return state },
-//         success: state => { return state },
-//         failure: state => { return state },
-//         finish: state => { return state },
-//         always: state => { return state }
+//         start: (state, { payload }) => { return state },
+//         success: (state, { payload }) => { return state },
+//         failure: (state, { payload }) => { return state },
+//         finish: (state, { payload }) => { return state },
+//         always: (state, { payload }) => { return state }
 //     },
 //     signup: {                                <== Promise reducers
-//         start: state => { return state },
-//         success: state => { return state },
-//         failure: state => { return state },
-//         finish: state => { return state },
-//         always: state => { return state }
+//         start: (state, { payload }) => { return state },
+//         success: (state, { payload }) => { return state },
+//         failure: (state, { payload }) => { return state },
+//         finish: (state, { payload }) => { return state },
+//         always: (state, { payload }) => { return state }
 //     },
 //     Default: mergeDeep                       <== Function follows (state [, payload]) => { return state }
 // }, initialState)

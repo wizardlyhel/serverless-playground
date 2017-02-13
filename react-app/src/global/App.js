@@ -8,8 +8,6 @@ import Home from '../container/home';
 import Login from '../components/login';
 import Register from '../container/register';
 
-import {login, loginV2, loginV3, loginForm} from './actions/';
-
 class App extends Component {
     componentDidMount() {
 
@@ -23,7 +21,7 @@ class App extends Component {
         return (
             <div>
                 <p>header</p>
-                
+
                 <Router history={browserHistory}>
                     {authenticated ?
                         <Route path="/" component={Home} />
