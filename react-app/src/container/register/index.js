@@ -1,18 +1,26 @@
 import React, { Component, PropTypes } from 'react'
 import {connect} from 'react-redux'
 import classNames from 'classnames'
+import { Field, reduxForm } from 'redux-form';
 
-import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
+import {
+    TextField
+} from 'redux-form-material-ui'
+import * as formValidationRules from '../../utils/form-validation'
 
-import { authentication } from '../../global/actions/authentication'
+import { userSignup } from '../../global/actions/authentication'
 
-class Login extends Component {
+class Register extends Component {
     render() {
         const {
             intl,
             showInDialog,
-            submitLogin
+            submitForm,
+
+            pristine,
+            submitting,
+            invalid
         } = this.props
 
         const containerClasses = classNames({
@@ -24,12 +32,39 @@ class Login extends Component {
             <div className="pure-g u-text-align-center">
                 <div className={containerClasses}>
                     <div className="u-padding-lg">
-                        <TextField type="email" floatingLabelText={intl.messages['auth.emailLabel']} fullWidth={true} />
-                        <TextField type="password" floatingLabelText={intl.messages['auth.passwordLabel']} fullWidth={true} />
-                        <TextField type="password" floatingLabelText={intl.messages['auth.confirmPasswordLabel']} fullWidth={true} />
-                        <div className="u-padding-top-lg">
-                            <RaisedButton primary={true} label={intl.messages['auth.signUpButton']} fullWidth={true} />
-                        </div>
+                        <form onSubmit={submitForm}>
+                            <Field component={TextField}
+                                name="email" type="email"
+                                floatingLabelText={intl.messages['auth.emailLabel']}
+                                fullWidth={true}
+                                validate={[formValidationRules.required, formValidationRules.email]}
+                            />
+                            <Field component={TextField}
+                                name ="password" type="password"
+                                floatingLabelText={intl.messages['auth.passwordLabel']}
+                                fullWidth={true}
+                                validate={[
+                                    formValidationRules.required,
+                                    formValidationRules.haveUppercase,
+                                    formValidationRules.haveLowercase,
+                                    formValidationRules.haveNumber,
+                                    formValidationRules.haveSpecial,
+                                    formValidationRules.minValue8
+                                ]}
+                            />
+                            <Field component={TextField}
+                                name="confirmPassword" type="password"
+                                floatingLabelText={intl.messages['auth.confirmPasswordLabel']}
+                                fullWidth={true}
+                                validate={[
+                                    formValidationRules.required,
+                                    formValidationRules.matchField('password')
+                                ]}
+                            />
+                            <div className="u-padding-top-lg">
+                                <RaisedButton type="submit" primary={true} label={intl.messages['auth.signUpButton']} disabled={pristine || submitting || invalid} fullWidth={true} />
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -37,16 +72,20 @@ class Login extends Component {
     }
 }
 
-Login.propTypes = {
+Register.propTypes = {
     /**
      * react-intl
      */
     intl: PropTypes.object.isRequired,
     /**
-     *  Signup form submit handler
+     *  form submit handler
      */
-    signup:PropTypes.func
+    submitForm:PropTypes.func
 }
+
+const RegisterForm = reduxForm({
+    form: 'register'
+})(Register);
 
 export const mapStateToProps = (state, props) => {
     return {
@@ -56,11 +95,11 @@ export const mapStateToProps = (state, props) => {
 
 export const mapDispatchToProps = (dispatch, props) => {
     return {
-        sigup: (username, password) => dispatch(authentication.signup(username, password))
+        submitForm: (values) => dispatch(userSignup(values))
     }
 }
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Login)
+)(RegisterForm)

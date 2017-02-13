@@ -1,4 +1,4 @@
-import { mergeDeep, createReducers } from './utils';
+import { mergeDeep, createReducers } from '../utils/redux';
 import { Map, List } from 'immutable'
 
 import * as appActions from './actions/'

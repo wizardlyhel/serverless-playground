@@ -6,7 +6,17 @@
 		"auth.passwordLabel": "Password",
 		"auth.confirmPasswordLabel": "Confirm Your Password",
 		"auth.signInButton": "Login",
-		"auth.signUpButton": "Create Account"
+		"auth.signUpButton": "Create Account",
+
+		"formValidation.required": "Required",
+		"formValidation.minLength": "Must be at least ${min} characters",
+		"formValidation.uppercase": "Must have at least 1 uppercase character",
+		"formValidation.lowercase": "Must have at least 1 lowercase character",
+		"formValidation.number": "Must have at least 1 number",
+		"formValidation.special": "Must have at least 1 special character",
+		"formValidation.passwordMatch": "Password did not match",
+		"formValidation.email": "Invalid email address"
+
 	},
 	"zh": {
 		"login": "Chinese Login"

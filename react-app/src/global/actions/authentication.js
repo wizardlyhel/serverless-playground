@@ -8,9 +8,9 @@ import {
 
 
 const config = {
-	region: '',
-	UserPoolId: '',
-	ClientId: ''
+	region: 'us-west-2',
+	UserPoolId: 'us-west-2_IfgqwF39A',
+	ClientId: '644dum0m2taajer2n6nm4im77n'
 }
 
 // Set AWS region
@@ -23,10 +23,13 @@ const userPool = new CognitoUserPool({
 
 export const userSignup = (formInput) => {
 	return new Promise((resolve, reject) => {
+		debugger
 		userPool.signUp(formInput.username, formInput.password, null, null, (err, result) => {
 			if (err) {
-				reject()
+				debugger
+				reject(err)
 			}
+			debugger
 			resolve()
 		})
 	})
