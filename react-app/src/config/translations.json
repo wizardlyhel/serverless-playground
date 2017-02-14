@@ -7,6 +7,9 @@
 		"auth.confirmPasswordLabel": "Confirm Your Password",
 		"auth.signInButton": "Login",
 		"auth.signUpButton": "Create Account",
+		"auth.confirmationDescription": "Please enter the confirmation code sent to your email inbox:",
+		"auth.confirmationCode": "Confirmation Code",
+		"auth.confirmationButton": "Submit",
 
 		"formValidation.required": "Required",
 		"formValidation.minLength": "Must be at least ${min} characters",
@@ -18,7 +21,9 @@
 		"formValidation.email": "Invalid email address",
 
 		"awsError.server": "Something went wrong. Please try again later",
-		"awsError.userExists": "User already exists."
+		"awsError.userExists": "User already exists.",
+		"awsError.invalidPassword": "Invalid Password: Must have a uppercase, a lowercase, a number, a special character, and at least 8 characters.",
+		"awsError.notAuthorized": "Your account have been disabled. Please contact adminstrator"
 
 	},
 	"zh": {

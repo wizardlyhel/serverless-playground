@@ -6,10 +6,13 @@ import {
     CognitoUser
 } from "amazon-cognito-identity-js";
 
+import { cognitoUserStatePath } from '../../utils/state-paths';
+
 const config = {
     region: 'us-west-2',
     UserPoolId: 'us-west-2_IfgqwF39A',
-    ClientId: '644dum0m2taajer2n6nm4im77n'
+    ClientId: '644dum0m2taajer2n6nm4im77n',
+    IdentityPoolId: 'us-west-2:df5dd931-af87-49d0-a5ce-a88da963383c'
 }
 
 // Set AWS region
@@ -27,6 +30,13 @@ const cognitoUserAttribute = (name, value) => {
     })
 }
 
+const getCognitoUser = (email) => {
+    return new CognitoUser({
+        Username: email,
+        Pool: userPool
+    });
+}
+
 export const userSignUp = (formInputs) => {
     return new Promise((resolve, reject) => {
         const attributeList = [
@@ -37,45 +47,42 @@ export const userSignUp = (formInputs) => {
             if (err) {
                 return reject(err)
             }
-            return resolve({
-                cognitoUser: result.user
-            })
+            // Store cognitoUser in state
+            return resolve(result.user)
         })
     })
 }
 
-export const userSignIn = (formInput) => {
+export const userSignIn = (state, formInput) => {
     return new Promise((resolve, reject) => {
         const authenticationDetails = new AuthenticationDetails({
             Username: formInput.email,
             Password: formInput.password,
         });
 
-        const cognitoUser = new CognitoUser({
-            Username: formInput.email,
-            Pool: userPool
-        });
+        let cognitoUser = state.getIn(cognitoUserStatePath)
+        if (!cognitoUser) {
+            cognitoUser = getCognitoUser(formInput.email)
+        }
 
         cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: function (result) {
-                console.log('access token + ' + result.getAccessToken().getJwtToken());
-
                 // Store access token
-                // AWS.config.credentials = new CognitoIdentityCredentials({
-                //     IdentityPoolId : '...', // your identity pool id here
-                //     Logins : {
-                //         // Change the key below according to the specific region your user pool is in.
-                //         'cognito-idp.<region>.amazonaws.com/<YOUR_USER_POOL_ID>' : result.getIdToken().getJwtToken()
-                //     }
-                // });
+                Config.credentials = new CognitoIdentityCredentials({
+                    IdentityPoolId : config.IdentityPoolId,
+                    Logins : {
+                        [`cognito-idp.${config.region}.amazonaws.com/${config.UserPoolId}`]: result.getAccessToken().getJwtToken()
+                    }
+                });
 
                 // Instantiate aws sdk service objects now that the credentials have been updated.
                 // example: var s3 = new AWS.S3();
-
-                resolve()
+                debugger
+                resolve(result.user)
             },
             onFailure: function(err) {
-                reject()
+                debugger
+                reject(err)
             },
 
         })

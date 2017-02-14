@@ -7,6 +7,7 @@ import './style/stylesheet.scss';
 import Home from '../container/home';
 import Login from '../components/login';
 import Register from '../container/register';
+import UserConfrimation from '../container/user-confirmation';
 
 class App extends Component {
     componentDidMount() {
@@ -29,6 +30,7 @@ class App extends Component {
                         <Route path="/" component={Login} />
                     }
                         <Route path="/register" component={Register} />
+                        <Route path="/user-confirmation" component={UserConfrimation} />
                 </Router>
 
                 <p>footer</p>

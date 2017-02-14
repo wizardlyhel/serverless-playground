@@ -1,4 +1,6 @@
 import { createReducers } from '../utils/redux';
+import { handleAWSCognitoError } from '../utils/aws-errors';
+import { cognitoUserStatePath } from '../utils/state-paths';
 import { Map } from 'immutable'
 
 import * as appActions from './actions/'
@@ -8,30 +10,17 @@ const initialState = Map({
     aws: {}
 })
 
-const awsCognitoErrorCodeMapping = (err) => {
-    switch(err.code) {
-        case 'UsernameExistsException':
-            return 'awsError.userExists'
-        default:
-            return 'awsError.server'
-    }
-}
-
-const handleAWSError = (state, formName, payload) => {
-    return state.setIn(['formErrors', formName], payload ? awsCognitoErrorCodeMapping(payload) : payload)
-}
-
 // Reducers
 export default createReducers({
     [appActions.signUp]: {
         start: (state, { payload }) => {
-            return handleAWSError(state, 'register', undefined)
+            return handleAWSCognitoError(state, 'register', undefined)
         },
         failure: (state, { payload }) => {
-            return handleAWSError(state, 'register', payload)
+            return handleAWSCognitoError(state, 'register', payload)
         },
         success: (state, { payload }) => {
-            return state.setIn(['aws'], payload)
+            return state.setIn(cognitoUserStatePath, payload)
         }
     },
     [appActions.signIn]: {
@@ -44,14 +33,11 @@ export default createReducers({
             return state
         }
     },
-    [appActions.signOut]: {
-        failure: (state, { payload }) => {
-            console.log('Reducer failure', payload);
-            return state
-        },
-        success: (state, { payload }) => {
-            console.log('Reducer success', payload);
-            return state
+    [appActions.signOut]: (state) => {
+        const cognitoUser = state.getIn(cognitoUserStatePath)
+        if (cognitoUser) {
+            return state.setIn(cognitoUserStatePath, cognitoUser.signOut())
         }
+        return state
     }
 }, initialState)
