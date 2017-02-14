@@ -20,13 +20,6 @@ const userPool = new CognitoUserPool({
     ClientId: config.ClientId
 });
 
-const awsCognitoErrorCodeMapping = (err) => {
-    switch(err.code) {
-        default:
-            return {form: 'Something went wrong'}
-    }
-}
-
 const cognitoUserAttribute = (name, value) => {
     return new CognitoUserAttribute({
         Name: name,
@@ -42,7 +35,7 @@ export const userSignUp = (formInputs) => {
 
         userPool.signUp(formInputs.email, formInputs.password, attributeList, null, (err, result) => {
             if (err) {
-                return reject(awsCognitoErrorCodeMapping(err))
+                return reject(err)
             }
             return resolve({
                 cognitoUser: result.user

@@ -8,12 +8,27 @@ const initialState = Map({
     aws: {}
 })
 
+const awsCognitoErrorCodeMapping = (err) => {
+    switch(err.code) {
+        case 'UsernameExistsException':
+            return 'awsError.userExists'
+        default:
+            return 'awsError.server'
+    }
+}
+
+const handleAWSError = (state, formName, payload) => {
+    return state.setIn(['formErrors', formName], payload ? awsCognitoErrorCodeMapping(payload) : payload)
+}
+
 // Reducers
 export default createReducers({
     [appActions.signUp]: {
+        start: (state, { payload }) => {
+            return handleAWSError(state, 'register', undefined)
+        },
         failure: (state, { payload }) => {
-            console.log('Reducer failure', payload);
-            return state
+            return handleAWSError(state, 'register', payload)
         },
         success: (state, { payload }) => {
             return state.setIn(['aws'], payload)

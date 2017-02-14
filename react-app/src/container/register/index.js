@@ -17,6 +17,7 @@ class Register extends Component {
             intl,
             showInDialog,
             submitForm,
+            formError,
 
             handleSubmit,
             pristine,
@@ -33,6 +34,8 @@ class Register extends Component {
             <div className="pure-g u-text-align-center">
                 <div className={containerClasses}>
                     <div className="u-padding-lg">
+                        
+                        <div>{formError && intl.messages[formError]}</div>
                         <form noValidate={true} onSubmit={handleSubmit(submitForm)}>
                             <Field component={TextField}
                                 name="email" type="email"
@@ -73,7 +76,12 @@ class Register extends Component {
     }
 }
 
+Register.defaultProps = {
+    formError: undefined
+}
+
 Register.propTypes = {
+    formError: PropTypes.string,
     /**
      * react-intl
      */
@@ -90,7 +98,8 @@ const RegisterForm = reduxForm({
 
 export const mapStateToProps = (state, props) => {
     return {
-        intl: state.intl
+        intl: state.intl,
+        formError: state.app.formErrors && state.app.formErrors.register ? state.app.formErrors.register : undefined
     }
 }
 

@@ -15,7 +15,10 @@
 		"formValidation.number": "Must have at least 1 number",
 		"formValidation.special": "Must have at least 1 special character",
 		"formValidation.passwordMatch": "Password did not match",
-		"formValidation.email": "Invalid email address"
+		"formValidation.email": "Invalid email address",
+
+		"awsError.server": "Something went wrong. Please try again later",
+		"awsError.userExists": "User already exists."
 
 	},
 	"zh": {
