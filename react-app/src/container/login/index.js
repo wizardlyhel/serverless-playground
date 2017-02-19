@@ -1,20 +1,24 @@
 import React, { Component, PropTypes } from 'react'
 import {connect} from 'react-redux'
+import { Link } from 'react-router'
+import classNames from 'classnames'
 import { Field, reduxForm } from 'redux-form';
 
+import Divider from 'material-ui/Divider';
 import RaisedButton from 'material-ui/RaisedButton'
 import {
     TextField
 } from 'redux-form-material-ui'
 import * as formValidationRules from '../../utils/form-validation'
 
-import { signUp } from '../../global/actions/'
+import { actionProxy, signIn } from '../../global/actions/'
 
-class Register extends Component {
+class Login extends Component {
     render() {
         const {
             intl,
             submitForm,
+            showInDialog,
             formError,
 
             // Redux form props
@@ -24,9 +28,14 @@ class Register extends Component {
             invalid
         } = this.props
 
+        const containerClasses = classNames({
+            'pure-u-sm-1 pure-u-md-1-2 pure-u-lg-1-3': !showInDialog,
+            'pure-u-1': showInDialog
+        })
+
         return (
             <div className="pure-g u-text-align-center">
-                <div className="pure-u-sm-1 pure-u-md-1-2 pure-u-lg-1-3">
+                <div className={containerClasses}>
                     <div className="u-padding-lg">
                         {formError &&
                             <p className="">{intl.messages[formError]}</p>
@@ -42,28 +51,18 @@ class Register extends Component {
                                 name="password" type="password"
                                 floatingLabelText={intl.messages['auth.passwordLabel']}
                                 fullWidth={true}
-                                validate={[
-                                    formValidationRules.required,
-                                    formValidationRules.haveUppercase,
-                                    formValidationRules.haveLowercase,
-                                    formValidationRules.haveNumber,
-                                    formValidationRules.haveSpecial,
-                                    formValidationRules.minValue8
-                                ]}
-                            />
-                            <Field component={TextField}
-                                name="confirmPassword" type="password"
-                                floatingLabelText={intl.messages['auth.confirmPasswordLabel']}
-                                fullWidth={true}
-                                validate={[
-                                    formValidationRules.required,
-                                    formValidationRules.matchField('password')
-                                ]}
+                                validate={formValidationRules.required}
                             />
                             <div className="u-padding-top-lg">
-                                <RaisedButton type="submit" primary={true} label={intl.messages['auth.signUpButton']} disabled={pristine || submitting || invalid} fullWidth={true} />
+                                <RaisedButton type="submit" primary={true} label={intl.messages['auth.signInButton']} disabled={pristine || submitting || invalid} fullWidth={true} />
                             </div>
                         </form>
+                        <Divider />
+                        <div className="u-padding-top-lg">
+                            <Link to="/register">
+                                <RaisedButton primary={true} label={intl.messages['auth.signUpButton']} fullWidth={true} />
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -71,43 +70,51 @@ class Register extends Component {
     }
 }
 
-const formIdentifier = 'register'
+const formIdentifier = 'login'
 
-Register.defaultProps = {
-    formError: undefined
+Login.defaultProps = {
+    showInDialog: false
 }
 
-Register.propTypes = {
+Login.propTypes = {
     formError: PropTypes.string,
     /**
      * react-intl
      */
     intl: PropTypes.object.isRequired,
     /**
-     *  form submit handler
+     *  Wrap login form in a dialog
+     */
+    showInDialog: PropTypes.bool,
+    /**
+     *  Login form submit handler
      */
     submitForm:PropTypes.func
 }
 
-const RegisterForm = reduxForm({
+const LoginForm = reduxForm({
     form: formIdentifier
-})(Register);
+})(Login);
 
 export const mapStateToProps = (state, props) => {
-    const registerError = state.app.getIn(['formErrors'])[formIdentifier]
+    const loginError = state.app.getIn(['formErrors'])[formIdentifier]
+
     return {
         intl: state.intl,
-        formError: registerError ? registerError : undefined
+        formError: loginError ? loginError : undefined
     }
 }
 
 export const mapDispatchToProps = (dispatch, props) => {
     return {
-        submitForm: (values) => dispatch(signUp(values))
+        submitForm: (values) => dispatch(actionProxy({
+            action: signIn,
+            args: values
+        }))
     }
 }
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(RegisterForm)
+)(LoginForm)

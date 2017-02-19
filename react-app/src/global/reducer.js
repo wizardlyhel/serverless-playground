@@ -1,75 +1,60 @@
 import { createReducers } from '../utils/redux';
-import { handleAWSCognitoError } from '../utils/aws-errors';
-import { cognitoUserStatePath } from '../utils/state-paths';
+import { handleError } from '../utils/errors';
 import * as Immutable from 'immutable'
 
 import * as appActions from './actions/'
 
 const initialState = Immutable.fromJS({
     authenticated: false,
-    aws: {
-        cognitoUser: false
-    },
-    formErrors: {
-        register: false,
-        userConfirmation: false
-    }
+    formErrors: {},
+    username: false
 })
 
-const handleAccountState = (formName) => {
+const setUserAuthenticationStatus = (state, status) => {
+    return state.setIn(['authenticated'], status)
+}
+
+const handleFormState = (formName) => {
     return {
-        start: (state, { payload }) => {
-            return handleAWSCognitoError(state, formName, undefined)
+        start: (state) => {
+            return handleError(state, formName, undefined)
         },
         failure: (state, { payload }) => {
-            return handleAWSCognitoError(state, formName, payload)
+            return handleError(state, formName, payload)
         },
         success: (state, { payload }) => {
-            return state.mergeDeep(cognitoUserStatePath, payload)
+            return state.setIn(['username'], payload)
         }
     }
 }
 
 // Reducers
 export default createReducers({
-    [appActions.signUp]: {
-        start: (state, { payload }) => {
-            return handleAWSCognitoError(state, 'register', undefined)
-        },
+    [appActions.restoreUserSession]: {
         failure: (state, { payload }) => {
-            return handleAWSCognitoError(state, 'register', payload)
+            return setUserAuthenticationStatus(state, false)
         },
         success: (state, { payload }) => {
-            return state.setIn(cognitoUserStatePath, payload)
+            state = state.setIn(['username'], payload)
+            return setUserAuthenticationStatus(state, true)
         }
     },
-    [appActions.signUpConfirm]: {
-        start: (state, { payload }) => {
-            return handleAWSCognitoError(state, 'userConfirmation', undefined)
-        },
-        failure: (state, { payload }) => {
-            return handleAWSCognitoError(state, 'userConfirmation', payload)
-        },
-        success: (state, { payload }) => {
-            return state.setIn(cognitoUserStatePath, payload)
-        }
-    },
+    [appActions.signUp]: handleFormState('register'),
+    [appActions.signUpConfirm]: handleFormState('userConfirmation'),
     [appActions.signIn]: {
+        start: (state) => {
+            return handleError(state, 'login', undefined)
+        },
         failure: (state, { payload }) => {
-            console.log('Reducer failure', payload);
-            return state
+            state = setUserAuthenticationStatus(state, false)
+            return handleError(state, 'login', payload)
         },
         success: (state, { payload }) => {
-            console.log('Reducer success', payload);
-            return state
+            state = state.setIn(['username'], payload)
+            return setUserAuthenticationStatus(state, true)
         }
     },
     [appActions.signOut]: (state) => {
-        const cognitoUser = state.getIn(cognitoUserStatePath)
-        if (cognitoUser) {
-            return state.setIn(cognitoUserStatePath, cognitoUser.signOut())
-        }
-        return state
-    },
-    [appActions.userAuthenticationProxy]: (state) => {return state} 
+        return setUserAuthenticationStatus(state, false)
+    }
 }, initialState)

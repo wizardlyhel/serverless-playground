@@ -6,8 +6,6 @@ import {
     CognitoUser
 } from "amazon-cognito-identity-js";
 
-import { cognitoUserStatePath } from '../../utils/state-paths';
-
 const config = {
     region: 'us-west-2',
     UserPoolId: 'us-west-2_IfgqwF39A',
@@ -30,14 +28,20 @@ const cognitoUserAttribute = (name, value) => {
     })
 }
 
-export const getCognitoUser = (getState, email) => {
-    let cognitoUser = getState().app.getIn(cognitoUserStatePath)
+const getCognitoUser = (reject, getState, email) => {
+    let cognitoUser = userPool.getCurrentUser()
 
-    if (!cognitoUser && email) {
+    if (!cognitoUser) {
+        email = email ? email : getState().app.getIn(['username'])
+
         return new CognitoUser({
             Username: email,
             Pool: userPool
         });
+    }
+
+    if (!cognitoUser) {
+        reject('appError')
     }
 
     return cognitoUser
@@ -51,79 +55,81 @@ export const userSignUp = (formInputs) => {
 
         userPool.signUp(formInputs.email, formInputs.password, attributeList, null, (err, result) => {
             if (err) {
-                return reject({error: err})
+                return reject(err)
             }
-            // Store cognitoUser in state
-            return resolve(result.user)
+            return resolve(formInputs.email)
         })
     })
 }
 
-export const confirmUser = (cognitoUser, formInputs) => {
+export const confirmUser = (dispatch, getState, formInputs) => {
     return new Promise((resolve, reject) => {
+        const cognitoUser = getCognitoUser(reject, getState, formInputs && formInputs.email)
         cognitoUser.confirmRegistration(formInputs.confirmationCode, true, function(err, result) {
             if (err) {
-                return reject({
-                    error: err,
-                    cognitoUser
-                })
+                return reject(err)
             }
-            return resolve(cognitoUser)
+            return resolve(cognitoUser.getUsername())
         });
     })
 }
 
-export const resendConfirmationCode = (cognitoUser) => {
+export const resendConfirmationCode = (dispatch, getState) => {
     return new Promise((resolve, reject) => {
+        const cognitoUser = getCognitoUser(reject, getState)
         cognitoUser.resendConfirmationCode(function(err, result) {
             if (err) {
-                return reject({
-                    error: err,
-                    cognitoUser
-                })
+                return reject(err)
             }
-            return resolve(cognitoUser)
+            return resolve(cognitoUser.getUsername())
         });
     })
 }
 
-export const userSignIn = (cognitoUser, formInputs) => {
+const storeUserSession = (token) => {
+    // Store access token
+    Config.credentials = new CognitoIdentityCredentials({
+        IdentityPoolId : config.IdentityPoolId,
+        Logins : {
+            [`cognito-idp.${config.region}.amazonaws.com/${config.UserPoolId}`]: token
+        }
+    });
+}
+
+export const userSignIn = (dispatch, getState, formInputs) => {
     return new Promise((resolve, reject) => {
         const authenticationDetails = new AuthenticationDetails({
             Username: formInputs.email,
             Password: formInputs.password,
         });
 
+        const cognitoUser = getCognitoUser(reject, getState, formInputs && formInputs.email)
+
         cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: function (result) {
-                // Store access token
-                Config.credentials = new CognitoIdentityCredentials({
-                    IdentityPoolId : config.IdentityPoolId,
-                    Logins : {
-                        [`cognito-idp.${config.region}.amazonaws.com/${config.UserPoolId}`]: result.getAccessToken().getJwtToken()
-                    }
-                });
-
-                // Instantiate aws sdk service objects now that the credentials have been updated.
-                // example: var s3 = new AWS.S3();
-                debugger
-                resolve(result.user)
+                storeUserSession(result.getAccessToken().getJwtToken())
+                resolve(cognitoUser.getUsername())
             },
             onFailure: function(err) {
-                debugger
-                reject({error: err})
+                reject(err)
             },
 
         })
     })
 }
 
-// Proxy function to get Cognito User from state
-export const userAuthenticationProxy = (payload) => {
-    return (dispatch, getState) => {
-        const formInputs = payload.formInputs
-        const cognitoUser = getCognitoUser(getState, formInputs && formInputs.email)
-
-        dispatch(payload.action(cognitoUser, formInputs))
-    }
+export const getUserSession = () => {
+    return new Promise((resolve, reject) => {
+        const cognitoUser = userPool.getCurrentUser()
+        if (cognitoUser) {
+            cognitoUser.getSession((err, session) => {
+                if (err) {
+                    reject(err)
+                }
+                storeUserSession(session.getIdToken().getJwtToken())
+                resolve(cognitoUser.getUsername())
+            })
+        }
+        reject()
+    })
 }

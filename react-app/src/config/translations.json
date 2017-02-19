@@ -21,10 +21,11 @@
 		"formValidation.passwordMatch": "Password did not match",
 		"formValidation.email": "Invalid email address",
 
-		"awsError.server": "Something went wrong. Please try again later",
+		"awsError.server": "Something went wrong. Please try again later.",
 		"awsError.userExists": "User already exists.",
+		"awsError.userNotFound": "User does not exist.",
 		"awsError.invalidPassword": "Invalid Password: Must have a uppercase, a lowercase, a number, a special character, and at least 8 characters.",
-		"awsError.notAuthorized": "Your account have been disabled. Please contact adminstrator",
+		"awsError.notAuthorized": "Incorrect username or password.",
 		"awsError.codeExpired": "Your confirmation code expired. Please request another one.",
 		"awsError.requestConfirmationCodeButton": "Send new confirmation code",
 		"awsError.codeMismatch": "Invalid verification code provided, please try again."

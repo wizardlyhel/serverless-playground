@@ -1,28 +1,57 @@
 import { createAction } from '../../utils/redux';
 import { browserHistory } from 'react-router'
-import { userSignUp, confirmUser, resendConfirmationCode, userSignIn } from './authentication'
+import {
+    getUserSession,
+    userSignUp,
+    confirmUser,
+    resendConfirmationCode,
+    userSignIn
+} from './authentication'
 
 // Actions
-export const signUp = createAction('Sign up', userSignUp, {
+
+// Proxy function to access state
+//
+// Must be in the format of:
+// {
+//      action: <action to be dispatch>,
+//      args: value to be forward
+// }
+export const actionProxy = (payload) => {
+    return (dispatch, getState) => {
+        dispatch(payload.action(dispatch, getState, payload.args))
+    }
+}
+
+export const restoreUserSession = createAction('Restore user session', getUserSession, {
     onSuccess: (result, getState) => {
+        browserHistory.push('/')
+    },
+    onFailure: (result, getState) => {
+        browserHistory.push('/login')
+    }
+})
+
+export const signUp = createAction('Sign up', userSignUp, {
+    onSuccess: () => {
     	browserHistory.push('/user-confirmation')
     }
 })
 
 export const signUpConfirm = createAction('Confirm user', confirmUser, {
-    onSuccess: (result, getState) => {
+    onSuccess: () => {
         browserHistory.push('/')
     }
 })
 
-export const resendConfirmation = createAction('Confirm user', resendConfirmationCode)
+export const resendConfirmation = createAction('Resend confirmation code', resendConfirmationCode)
 
 export const signIn = createAction('Sign in', userSignIn, {
     onSuccess: (result, getState) => {
-    	console.log('Action success', result)
+    	browserHistory.push('/')
     },
     onFailure: (result, getState) => {
-    	console.log('Action failed', result)
+    	browserHistory.push('/login')
     }
 })
 

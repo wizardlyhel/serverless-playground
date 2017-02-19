@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react'
 import {connect} from 'react-redux'
-import classNames from 'classnames'
 import { Field, reduxForm } from 'redux-form';
 
 import RaisedButton from 'material-ui/RaisedButton'
@@ -9,9 +8,7 @@ import {
 } from 'redux-form-material-ui'
 import * as formValidationRules from '../../utils/form-validation'
 
-import { signUpConfirm, resendConfirmation } from '../../global/actions/'
-import { userAuthenticationProxy } from '../../global/actions/authentication'
-import { cognitoUserStatePath } from '../../utils/state-paths';
+import { actionProxy, signUpConfirm, resendConfirmation } from '../../global/actions/'
 
 class UserConfirmation extends Component {
     constructor(props) {
@@ -39,7 +36,7 @@ class UserConfirmation extends Component {
             submitForm,
             resendConfirmationCode,
             formError,
-            noSavedUser,
+            username,
 
             // Redux form props
             handleSubmit,
@@ -64,7 +61,7 @@ class UserConfirmation extends Component {
                         }
                         <p>{intl.messages['auth.confirmationDescription']}</p>
                         <form noValidate={true} onSubmit={handleSubmit(submitForm)}>
-                            {noSavedUser &&
+                            {!username &&
                                 <Field component={TextField}
                                     name="email" type="email"
                                     floatingLabelText={intl.messages['auth.emailLabel']}
@@ -106,7 +103,7 @@ UserConfirmation.propTypes = {
      */
     submitForm: PropTypes.func,
     resendConfirmationCode: PropTypes.func,
-    noSavedUser: PropTypes.bool
+    username: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 }
 
 const UserConfirmationForm = reduxForm({
@@ -114,22 +111,21 @@ const UserConfirmationForm = reduxForm({
 })(UserConfirmation);
 
 export const mapStateToProps = (state, props) => {
-    const userConfirmationError = state.app.getIn(['formErrors', formIdentifier])
-
+    const userConfirmationError = state.app.getIn(['formErrors'])[formIdentifier]
     return {
         intl: state.intl,
         formError: userConfirmationError ? userConfirmationError : undefined,
-        noSavedUser: !state.app.getIn(['aws', 'cognitoUser'])
+        username: state.app.getIn(['username'])
     }
 }
 
 export const mapDispatchToProps = (dispatch, props) => {
     return {
-        submitForm: (values) => dispatch(userAuthenticationProxy({
+        submitForm: (values) => dispatch(actionProxy({
             action: signUpConfirm,
-            formInputs: values
+            args: values
         })),
-        resendConfirmationCode: (values) => dispatch(userAuthenticationProxy({
+        resendConfirmationCode: () => dispatch(actionProxy({
             action: resendConfirmation
         }))
     }

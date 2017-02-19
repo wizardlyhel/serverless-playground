@@ -1,6 +1,4 @@
-import { cognitoUserStatePath } from './state-paths';
-
-const awsCognitoErrorCodeMapping = (err) => {
+const errorCodeMapping = (err) => {
     if (err.code) {
         switch(err.code) {
         	case 'InvalidPasswordException':
@@ -13,6 +11,8 @@ const awsCognitoErrorCodeMapping = (err) => {
                 return 'awsError.codeExpired'
             case 'CodeMismatchException':
                 return 'awsError.codeMismatch'
+            case 'UserNotFoundException':
+                return 'awsError.userNotFound'
             default:
                 return 'awsError.server'
         }
@@ -20,10 +20,9 @@ const awsCognitoErrorCodeMapping = (err) => {
     return err
 }
 
-export const handleAWSCognitoError = (state, formName, payload) => {
-    if (payload && payload.cognitoUser) {
-        state = state.setIn(cognitoUserStatePath, payload.cognitoUser)
-    }
-    return state.setIn(['formErrors', formName], payload && payload.error ? awsCognitoErrorCodeMapping(payload.error) : payload)
-
+export const handleError = (state, formName, payload) => {
+    return state
+        .setIn(['formErrors'], {
+            [formName]: payload ? errorCodeMapping(payload) : payload
+        })
 }

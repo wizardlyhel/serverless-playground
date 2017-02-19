@@ -1,64 +1,46 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
+
+import { restoreUserSession } from './actions/'
 
 import './style/stylesheet.scss';
 
 import Home from '../container/home';
-import Login from '../components/login';
+import Login from '../container/login';
 import Register from '../container/register';
 import UserConfrimation from '../container/user-confirmation';
 
 class App extends Component {
     componentDidMount() {
-
+        this.props.restoreSession()
     }
 
     render() {
-        const {
-            authenticated
-        } = this.props
-
         return (
             <div>
                 <p>header</p>
 
                 <Router history={browserHistory}>
-                    {authenticated ?
-                        <Route path="/" component={Home} />
-                    :
-                        <Route path="/" component={Login} />
-                    }
-                        <Route path="/register" component={Register} />
-                        <Route path="/user-confirmation" component={UserConfrimation} />
+                    <Route path="/" component={Home} />
+                    <Route path="/login" component={Login} />
+                    <Route path="/register" component={Register} />
+                    <Route path="/user-confirmation" component={UserConfrimation} />
                 </Router>
 
                 <p>footer</p>
             </div>
-        );
+        )
     }
 }
 
-App.propTypes = {
-    /**
-     * react-intl
-     */
-    intl: PropTypes.object.isRequired,
-    authenticated: PropTypes.bool
-}
-
-export const mapStateToProps = (state, props) => {
+export const mapDispatchToProps = (dispatch, props) => {
     return {
-        intl: state.intl,
-        authenticated: state.app.authenticated
+        restoreSession: () => dispatch(restoreUserSession())
     }
 }
-
-// export const mapDispatchToProps = (dispatch, props) => {
-//     return {
-//     }
-// }
 
 export default connect(
-    mapStateToProps
+    null,
+    mapDispatchToProps
 )(App)
