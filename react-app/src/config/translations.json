@@ -1,4 +1,5 @@
 {
+
 	"en": {
 		"companyName": "Aventine",
 
@@ -23,7 +24,10 @@
 		"awsError.server": "Something went wrong. Please try again later",
 		"awsError.userExists": "User already exists.",
 		"awsError.invalidPassword": "Invalid Password: Must have a uppercase, a lowercase, a number, a special character, and at least 8 characters.",
-		"awsError.notAuthorized": "Your account have been disabled. Please contact adminstrator"
+		"awsError.notAuthorized": "Your account have been disabled. Please contact adminstrator",
+		"awsError.codeExpired": "Your confirmation code expired. Please request another one.",
+		"awsError.requestConfirmationCodeButton": "Send new confirmation code",
+		"awsError.codeMismatch": "Invalid verification code provided, please try again."
 
 	},
 	"zh": {

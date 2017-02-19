@@ -1,14 +1,34 @@
 import { createReducers } from '../utils/redux';
 import { handleAWSCognitoError } from '../utils/aws-errors';
 import { cognitoUserStatePath } from '../utils/state-paths';
-import { Map } from 'immutable'
+import * as Immutable from 'immutable'
 
 import * as appActions from './actions/'
 
-const initialState = Map({
+const initialState = Immutable.fromJS({
     authenticated: false,
-    aws: {}
+    aws: {
+        cognitoUser: false
+    },
+    formErrors: {
+        register: false,
+        userConfirmation: false
+    }
 })
+
+const handleAccountState = (formName) => {
+    return {
+        start: (state, { payload }) => {
+            return handleAWSCognitoError(state, formName, undefined)
+        },
+        failure: (state, { payload }) => {
+            return handleAWSCognitoError(state, formName, payload)
+        },
+        success: (state, { payload }) => {
+            return state.mergeDeep(cognitoUserStatePath, payload)
+        }
+    }
+}
 
 // Reducers
 export default createReducers({
@@ -18,6 +38,17 @@ export default createReducers({
         },
         failure: (state, { payload }) => {
             return handleAWSCognitoError(state, 'register', payload)
+        },
+        success: (state, { payload }) => {
+            return state.setIn(cognitoUserStatePath, payload)
+        }
+    },
+    [appActions.signUpConfirm]: {
+        start: (state, { payload }) => {
+            return handleAWSCognitoError(state, 'userConfirmation', undefined)
+        },
+        failure: (state, { payload }) => {
+            return handleAWSCognitoError(state, 'userConfirmation', payload)
         },
         success: (state, { payload }) => {
             return state.setIn(cognitoUserStatePath, payload)
@@ -39,5 +70,6 @@ export default createReducers({
             return state.setIn(cognitoUserStatePath, cognitoUser.signOut())
         }
         return state
-    }
+    },
+    [appActions.userAuthenticationProxy]: (state) => {return state} 
 }, initialState)

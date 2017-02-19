@@ -9,36 +9,37 @@ import {
 } from 'redux-form-material-ui'
 import * as formValidationRules from '../../utils/form-validation'
 
-import { confirmUser } from '../../global/actions/'
+import { signUpConfirm, resendConfirmation } from '../../global/actions/'
+import { userAuthenticationProxy } from '../../global/actions/authentication'
 import { cognitoUserStatePath } from '../../utils/state-paths';
 
 class UserConfirmation extends Component {
     constructor(props) {
         super(props)
 
-        this.noSavedUser = !props.cognitoUser
-
-        // Deal with the following paths:
-        //
-        // Navigate from sign up - cognitoUser exists - get confirmation code only
         // Navigation with url from email - email and confirmation code is in link - dispatch action in mapSatetoProps
-        // Navigation to url with neither params - display both email and confirmation field
-
         let urlParams = {}
         window.location.search.substr(1).split('&').forEach((str) => {
             const [key, value] = str.split('=')
             urlParams[key] = decodeURIComponent(value)
         })
+
         if (urlParams.email && urlParams.confirmationCode) {
             this.submitForm(urlParams)
         }
+    }
+
+    componentWillMount() {
+
     }
 
     render() {
         const {
             intl,
             submitForm,
+            resendConfirmationCode,
             formError,
+            noSavedUser,
 
             // Redux form props
             handleSubmit,
@@ -54,9 +55,16 @@ class UserConfirmation extends Component {
                         {formError &&
                             <p className="">{intl.messages[formError]}</p>
                         }
+                        {(formError === 'awsError.codeExpired' || formError === 'awsError.codeMismatch') &&
+                            <RaisedButton onClick={resendConfirmationCode}
+                                primary={true}
+                                label={intl.messages['awsError.requestConfirmationCodeButton']}
+                                fullWidth={true}
+                            />
+                        }
                         <p>{intl.messages['auth.confirmationDescription']}</p>
                         <form noValidate={true} onSubmit={handleSubmit(submitForm)}>
-                            {this.noSavedUser &&
+                            {noSavedUser &&
                                 <Field component={TextField}
                                     name="email" type="email"
                                     floatingLabelText={intl.messages['auth.emailLabel']}
@@ -97,7 +105,8 @@ UserConfirmation.propTypes = {
      *  form submit handler
      */
     submitForm: PropTypes.func,
-    cognitoUser: PropTypes.object
+    resendConfirmationCode: PropTypes.func,
+    noSavedUser: PropTypes.bool
 }
 
 const UserConfirmationForm = reduxForm({
@@ -106,16 +115,23 @@ const UserConfirmationForm = reduxForm({
 
 export const mapStateToProps = (state, props) => {
     const userConfirmationError = state.app.getIn(['formErrors', formIdentifier])
+
     return {
         intl: state.intl,
         formError: userConfirmationError ? userConfirmationError : undefined,
-        cognitoUser: state.app.getIn(cognitoUserStatePath)
+        noSavedUser: !state.app.getIn(['aws', 'cognitoUser'])
     }
 }
 
 export const mapDispatchToProps = (dispatch, props) => {
     return {
-        submitForm: (values) => dispatch(confirmUser(values))
+        submitForm: (values) => dispatch(userAuthenticationProxy({
+            action: signUpConfirm,
+            formInputs: values
+        })),
+        resendConfirmationCode: (values) => dispatch(userAuthenticationProxy({
+            action: resendConfirmation
+        }))
     }
 }
 

@@ -30,11 +30,17 @@ const cognitoUserAttribute = (name, value) => {
     })
 }
 
-const getCognitoUser = (email) => {
-    return new CognitoUser({
-        Username: email,
-        Pool: userPool
-    });
+export const getCognitoUser = (getState, email) => {
+    let cognitoUser = getState().app.getIn(cognitoUserStatePath)
+
+    if (!cognitoUser && email) {
+        return new CognitoUser({
+            Username: email,
+            Pool: userPool
+        });
+    }
+
+    return cognitoUser
 }
 
 export const userSignUp = (formInputs) => {
@@ -45,7 +51,7 @@ export const userSignUp = (formInputs) => {
 
         userPool.signUp(formInputs.email, formInputs.password, attributeList, null, (err, result) => {
             if (err) {
-                return reject(err)
+                return reject({error: err})
             }
             // Store cognitoUser in state
             return resolve(result.user)
@@ -53,17 +59,40 @@ export const userSignUp = (formInputs) => {
     })
 }
 
-export const userSignIn = (state, formInput) => {
+export const confirmUser = (cognitoUser, formInputs) => {
+    return new Promise((resolve, reject) => {
+        cognitoUser.confirmRegistration(formInputs.confirmationCode, true, function(err, result) {
+            if (err) {
+                return reject({
+                    error: err,
+                    cognitoUser
+                })
+            }
+            return resolve(cognitoUser)
+        });
+    })
+}
+
+export const resendConfirmationCode = (cognitoUser) => {
+    return new Promise((resolve, reject) => {
+        cognitoUser.resendConfirmationCode(function(err, result) {
+            if (err) {
+                return reject({
+                    error: err,
+                    cognitoUser
+                })
+            }
+            return resolve(cognitoUser)
+        });
+    })
+}
+
+export const userSignIn = (cognitoUser, formInputs) => {
     return new Promise((resolve, reject) => {
         const authenticationDetails = new AuthenticationDetails({
-            Username: formInput.email,
-            Password: formInput.password,
+            Username: formInputs.email,
+            Password: formInputs.password,
         });
-
-        let cognitoUser = state.getIn(cognitoUserStatePath)
-        if (!cognitoUser) {
-            cognitoUser = getCognitoUser(formInput.email)
-        }
 
         cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: function (result) {
@@ -82,9 +111,19 @@ export const userSignIn = (state, formInput) => {
             },
             onFailure: function(err) {
                 debugger
-                reject(err)
+                reject({error: err})
             },
 
         })
     })
+}
+
+// Proxy function to get Cognito User from state
+export const userAuthenticationProxy = (payload) => {
+    return (dispatch, getState) => {
+        const formInputs = payload.formInputs
+        const cognitoUser = getCognitoUser(getState, formInputs && formInputs.email)
+
+        dispatch(payload.action(cognitoUser, formInputs))
+    }
 }
