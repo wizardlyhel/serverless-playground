@@ -73,10 +73,6 @@ class Register extends Component {
 
 const formIdentifier = 'register'
 
-Register.defaultProps = {
-    formError: undefined
-}
-
 Register.propTypes = {
     formError: PropTypes.string,
     /**

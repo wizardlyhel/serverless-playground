@@ -17,10 +17,17 @@ class App extends Component {
     }
 
     render() {
+        const {
+            intl,
+            appError
+        } = this.props
+        
         return (
             <div>
                 <p>header</p>
-
+                {appError &&
+                    <p className="">{intl.messages[appError]}</p>
+                }
                 <Router history={browserHistory}>
                     <Route path="/" component={Home} />
                     <Route path="/login" component={Login} />
@@ -34,6 +41,14 @@ class App extends Component {
     }
 }
 
+export const mapStateToProps = (state, props) => {
+    const appError = state.app.getIn(['formErrors'])['app']
+    return {
+        intl: state.intl,
+        appError: appError ? appError : undefined
+    }
+}
+
 export const mapDispatchToProps = (dispatch, props) => {
     return {
         restoreSession: () => dispatch(restoreUserSession())
@@ -41,6 +56,6 @@ export const mapDispatchToProps = (dispatch, props) => {
 }
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(App)
