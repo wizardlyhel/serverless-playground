@@ -18,15 +18,16 @@ addLocaleData([...en, ...zh])
 
 import App from './global/App';
 import rootReducer from './reducer';
+import AppTheme from './global/style/theme'
 
 // Internationalization
 const locale = 'en'
 const initialState = {
-  intl: {
-    defaultLocale: locale,
-    locale: locale,
-    messages: translations[locale]
-  }
+    intl: {
+        defaultLocale: locale,
+        locale: locale,
+        messages: translations[locale]
+    }
 }
 
 // Dev tools
@@ -43,9 +44,7 @@ let store = createStore(
 )
 
 // Theme
-const muiTheme = getMuiTheme({
-  userAgent: window.navigator.userAgent
-});
+const muiTheme = getMuiTheme(AppTheme);
 
 injectTapEventPlugin();
 
@@ -58,6 +57,6 @@ const Root = () => (
 );
 
 ReactDOM.render(
-  <Root />,
-  document.getElementById('root')
+    <Root />,
+    document.getElementById('root')
 );

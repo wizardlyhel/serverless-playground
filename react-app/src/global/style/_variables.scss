@@ -1,0 +1,37 @@
+$sub-unit: 4px;
+$unit: $sub-unit*2;
+
+// Typography
+// ---
+
+$system-font: -apple-system, 'Roboto', 'Helvetica Neue', sans-serif;
+$garamond-pro: adobe-garamond-pro, 'Baskerville', serif;
+
+$font-family: $system-font;
+$header-font-family: $garamond-pro;
+$input-font-family: $garamond-pro;
+
+$light-font-weight: 300;
+$font-weight: $light-font-weight;
+
+$line-height: 20px;
+$small-line-height: 16px;
+
+$smaller-font-size: 10px;
+$small-font-size: 12px;
+$font-size: 15px;
+$big-font-size: 16px;
+$bigger-font-size: 20px;
+$huge-font-size: 24px;
+$giant-font-size: 28px;
+
+// Letter Spacing
+$base-letter-spacing: 0.05em;
+$loose-letter-spacing: 0.075em;
+
+// Spacing values
+$very-small-space: $sub-unit*1; // 4px
+$small-space: $sub-unit*2; // 8px
+$base-space: $sub-unit*3; // 12px
+$large-space: $sub-unit*4; // 16px
+$very-large-space: $sub-unit*5; // 20px

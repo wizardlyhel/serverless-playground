@@ -1,0 +1,446 @@
+// Margin
+// ===
+
+// Miscellanous
+// ---
+
+@mixin margin-0($important: false) {
+    margin: 0 !important;
+}
+
+@mixin margin-center($important: false) {
+    margin: 0 auto !important;
+}
+
+
+// Vertical Margins
+// ---
+//
+// Granular control over vertical spacing independent of a component. Includes
+// values based on global spacing.
+//
+// Suffixes:
+// 0:  none
+// sm: small
+// md: medium
+// lg: large
+
+@mixin base-margin-top($important, $unit) {
+    @if($important) {
+        margin-top: $unit !important;
+    } @else {
+        margin-top: $unit;
+    }
+}
+
+@mixin margin-top(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    @include base-margin-top($important, $unit);
+}
+
+@mixin margin-top-0($important: false) {
+    @include base-margin-top($important, 0);
+}
+
+@mixin margin-top-sm(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    $unit: ($unit / 2);
+
+    @include base-margin-top($important, $unit);
+}
+
+@mixin margin-top-md(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    $unit: $unit * 1.5;
+
+    @include base-margin-top($important, $unit);
+}
+
+@mixin margin-top-lg(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    $unit: $unit * 2;
+
+    @include base-margin-top($important, $unit);
+}
+
+@mixin base-margin-bottom($important, $unit) {
+    @if($important) {
+        margin-bottom: $unit !important;
+    } @else {
+        margin-bottom: $unit;
+    }
+}
+
+@mixin margin-bottom(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    @include base-margin-bottom($important, $unit);
+}
+
+@mixin margin-bottom-0($important: false) {
+    @include base-margin-bottom($important, 0);
+}
+
+@mixin margin-bottom-sm(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    $unit: ($unit / 2);
+
+    @include base-margin-bottom($important, $unit);
+}
+
+@mixin margin-bottom-md(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    $unit: $unit * 1.5;
+
+    @include base-margin-bottom($important, $unit);
+}
+
+@mixin margin-bottom-lg(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    $unit: $unit * 2;
+
+    @include base-margin-bottom($important, $unit);
+}
+
+
+// Horizontal Margins
+// ---
+//
+// Granular control over horizontal spacing independent of a component. Includes
+// values based on global spacing, and adds values based on relative typographic
+// sizes.
+//
+// Suffixes:
+//
+// 0:  none
+// th: thick space (about 1.5× a “normal” word space)
+// en: en space (half an em)
+// em: em space
+// sm: small
+// md: medium
+// lg: large
+
+@mixin base-margin-start($important, $unit) {
+    @if($important) {
+        margin-left: $unit !important;
+    } @else {
+        margin-left: $unit;
+    }
+}
+
+@mixin margin-start(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    @include base-margin-start($important, $unit);
+}
+
+@mixin margin-start-0($important: false) {
+    @include base-margin-start($important, 0);
+}
+
+@mixin margin-start-th($important: false) {
+    @include base-margin-start($important, 0.333em);
+}
+
+@mixin margin-start-en($important: false) {
+    @include base-margin-start($important, 0.5em);
+
+    margin-left: 0.5em !important;
+}
+
+@mixin margin-start-em($important: false) {
+    @include base-margin-start($important, 1em);
+
+    margin-left: 1em !important;
+}
+
+@mixin margin-start-sm(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    $unit: ($unit / 2);
+
+    @include base-margin-start($important, $unit);
+}
+
+@mixin margin-start-md(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    $unit: $unit * 1.5;
+
+    @include base-margin-start($important, $unit);
+}
+
+@mixin margin-start-lg(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    $unit: $unit * 2;
+
+    @include base-margin-start($important, $unit);
+}
+
+@mixin base-margin-end($important, $unit) {
+    @if($important) {
+        margin-right: $unit !important;
+    } @else {
+        margin-right: $unit;
+    }
+}
+
+@mixin margin-end(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    @include base-margin-end($important, $unit);
+}
+
+@mixin margin-end-0($important: false) {
+    @include base-margin-end($important, 0);
+}
+
+@mixin margin-end-th($important: false) {
+    @include base-margin-end($important, 0.333em);
+}
+
+@mixin margin-end-en($important: false) {
+    @include base-margin-end($important, 0.5em);
+}
+
+@mixin margin-end-em($important: false) {
+    @include base-margin-end($important, 1em);
+}
+
+@mixin margin-end-sm(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    $unit: ($unit / 2);
+
+    @include base-margin-end($important, $unit);
+}
+
+@mixin margin-end-md(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    $unit: $unit * 1.5;
+
+    @include base-margin-end($important, $unit);
+}
+
+@mixin margin-end-lg(
+    $important: false,
+    $unit: if(variable-exists(unit), $unit, null)
+) {
+    $unit: $unit * 2;
+
+    @include base-margin-end($important, $unit);
+}
+
+
+// Margin
+// ===
+
+// Miscellanous
+// ---
+
+.u-margin-0 {
+    @include margin-0(true);
+}
+
+.u-margin-center {
+    @include margin-center(true);
+}
+
+.u-margin {
+    margin: $unit !important; // 8px
+}
+
+.u-margin-sm {
+    margin: $sub-unit !important; // 4px
+}
+
+.u-margin-md {
+    margin: $unit*1.5 !important; // 12px
+}
+
+.u-margin-lg {
+    margin: $unit*2 !important; // 16px
+}
+
+
+// Vertical Margins
+// ---
+//
+// Granular control over vertical spacing independent of a component. Includes
+// values based on global spacing.
+//
+// Suffixes:
+// 0:  none
+// sm: small
+// md: medium
+// lg: large
+
+.u-margin-top {
+    @include margin-top(true); // x1
+}
+
+.u-margin-top-0 {
+    @include margin-top-0(true);
+}
+
+.u-margin-top-sm {
+    @include margin-top-sm(true); // x0.5
+}
+
+.u-margin-top-md {
+    @include margin-top-md(true); // x1.5
+}
+
+.u-margin-top-lg {
+    @include margin-top-lg(true); // x2
+}
+
+.u-margin-top-xlg {
+    margin-top: $large-space*2 !important; // 32px
+}
+
+.u-margin-top-auto {
+    margin-top: auto !important;
+}
+
+.u-margin-bottom {
+    @include margin-bottom(true); // x1
+}
+
+.u-margin-bottom-0 {
+    @include margin-bottom-0(true);
+}
+
+.u-margin-bottom-sm {
+    @include margin-bottom-sm(true); // x0.5
+}
+
+.u-margin-bottom-md {
+    @include margin-bottom-md(true); // x1.5
+}
+
+.u-margin-bottom-lg {
+    @include margin-bottom-lg(true); // x2
+}
+
+.u-margin-bottom-xlg {
+    margin-bottom: $large-space*2 !important; // 32px
+}
+
+
+// Horizontal Margins
+// ---
+//
+// Granular control over horizontal spacing independent of a component. Includes
+// values based on global spacing, and adds values based on relative typographic
+// sizes.
+//
+// `start` and `end` are writing-direction independent forms for `left` and
+// `right`. For right-to-left localizations, create an alternate version of this
+// stylesheet with the property directions reversed.
+//
+// Suffixes:
+//
+// 0:  none
+// th: thick space (about 1.5× a “normal” word space)
+// en: en space (half an em)
+// em: em space
+// sm: small
+// md: medium
+// lg: large
+
+.u-margin-start {
+    @include margin-start(true); // x1
+}
+
+.u-margin-start-0 {
+    @include margin-start-0(true);
+}
+
+.u-margin-start-th {
+    @include margin-start-th(true); // 0.333em
+}
+
+.u-margin-start-en {
+    @include margin-start-en(true); // 0.5em
+}
+
+.u-margin-start-em {
+    @include margin-start-em(true); // 1em
+}
+
+.u-margin-start-sm {
+    @include margin-start-sm(true); // x0.5
+}
+
+.u-margin-start-md {
+    @include margin-start-md(true); // x1.5
+}
+
+.u-margin-start-lg {
+    @include margin-start-lg(true); // x2
+}
+
+.u-margin-start-xlg {
+    margin-left: $large-space*2 !important; // 32px
+}
+
+.u-margin-end {
+    @include margin-end(true); // x1
+}
+
+.u-margin-end-0 {
+    @include margin-end-0(true);
+}
+
+.u-margin-end-th {
+    @include margin-end-th(true); // 0.333em
+}
+
+.u-margin-end-en {
+    @include margin-end-en(true); // 0.5em
+}
+
+.u-margin-end-em {
+    @include margin-end-em(true); // 1em
+}
+
+.u-margin-end-sm {
+    @include margin-end-sm(true); // x0.5
+}
+
+.u-margin-end-md {
+    @include margin-end-md(true); // x1.5
+}
+
+.u-margin-end-lg {
+    @include margin-end-lg(true); // x2
+}
+
+.u-margin-end-xlg {
+    margin-right: $large-space*2 !important; // 32px
+}

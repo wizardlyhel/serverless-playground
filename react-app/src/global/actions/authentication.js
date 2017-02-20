@@ -118,6 +118,14 @@ export const userSignIn = (dispatch, getState, formInputs) => {
     })
 }
 
+export const userSignOut = (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+        const cognitoUser = getCognitoUser(reject, getState)
+        cognitoUser.signOut()
+        resolve()
+    })
+}
+
 export const getUserSession = () => {
     return new Promise((resolve, reject) => {
         const cognitoUser = userPool.getCurrentUser()

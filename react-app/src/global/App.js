@@ -4,16 +4,28 @@ import { Router, Route, browserHistory } from 'react-router'
 
 import { restoreUserSession } from './actions/'
 
-import './style/stylesheet.scss';
+import './style/stylesheet.scss'
 
-import Home from '../container/home';
-import Login from '../container/login';
-import Register from '../container/register';
-import UserConfrimation from '../container/user-confirmation';
+import Header from './partials/header'
+import Footer from './partials/footer'
+
+import Home from '../container/home'
+import Login from '../container/login'
+import Register from '../container/register'
+import UserConfrimation from '../container/user-confirmation'
 
 class App extends Component {
     componentDidMount() {
         this.props.restoreSession()
+    }
+
+    requireAuth = (nextState, replace) => {
+        if (!this.props.authenticated) {
+            replace({
+                pathname: '/login',
+                state: { nextPathname: nextState.location.pathname }
+            })
+        }
     }
 
     render() {
@@ -23,19 +35,21 @@ class App extends Component {
         } = this.props
         
         return (
-            <div>
-                <p>header</p>
-                {appError &&
-                    <p className="">{intl.messages[appError]}</p>
-                }
-                <Router history={browserHistory}>
-                    <Route path="/" component={Home} />
-                    <Route path="/login" component={Login} />
-                    <Route path="/register" component={Register} />
-                    <Route path="/user-confirmation" component={UserConfrimation} />
-                </Router>
+            <div className="pure-g">
+                <Header />
+                <div className="page">
+                    {appError &&
+                        <p className="">{intl.messages[appError]}</p>
+                    }
 
-                <p>footer</p>
+                    <Router history={browserHistory}>
+                        <Route path="/" component={Home} onEnter={this.requireAuth} />
+                        <Route path="/login" component={Login} />
+                        <Route path="/register" component={Register} />
+                        <Route path="/user-confirmation" component={UserConfrimation} />
+                    </Router>
+                </div>
+                <Footer />
             </div>
         )
     }
@@ -44,6 +58,7 @@ class App extends Component {
 export const mapStateToProps = (state, props) => {
     const appError = state.app.getIn(['formErrors'])['app']
     return {
+        authenticated: state.app.getIn(['authenticated']),
         intl: state.intl,
         appError: appError ? appError : undefined
     }

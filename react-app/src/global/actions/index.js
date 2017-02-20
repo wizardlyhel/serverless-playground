@@ -5,7 +5,8 @@ import {
     userSignUp,
     confirmUser,
     resendConfirmationCode,
-    userSignIn
+    userSignIn,
+    userSignOut
 } from './authentication'
 
 // Actions
@@ -55,4 +56,8 @@ export const signIn = createAction('Sign in', userSignIn, {
     }
 })
 
-export const signOut = createAction('Sign out')
+export const signOut = createAction('Sign out', userSignOut, {
+    onFinish: (result, getState) => {
+        browserHistory.push('/login')
+    }
+})

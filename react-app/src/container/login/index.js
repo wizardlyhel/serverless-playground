@@ -6,9 +6,7 @@ import { Field, reduxForm } from 'redux-form';
 
 import Divider from 'material-ui/Divider';
 import RaisedButton from 'material-ui/RaisedButton'
-import {
-    TextField
-} from 'redux-form-material-ui'
+import { TextField } from 'redux-form-material-ui'
 import * as formValidationRules from '../../utils/form-validation'
 
 import { actionProxy, signIn } from '../../global/actions/'
@@ -34,7 +32,7 @@ class Login extends Component {
         })
 
         return (
-            <div className="pure-g u-text-align-center">
+            <div className="u-text-align-center">
                 <div className={containerClasses}>
                     <div className="u-padding-lg">
                         {formError &&
@@ -60,7 +58,7 @@ class Login extends Component {
                         <Divider />
                         <div className="u-padding-top-lg">
                             <Link to="/register">
-                                <RaisedButton primary={true} label={intl.messages['auth.signUpButton']} fullWidth={true} />
+                                <RaisedButton secondary={true} label={intl.messages['auth.signUpButton']} fullWidth={true} />
                             </Link>
                         </div>
                     </div>

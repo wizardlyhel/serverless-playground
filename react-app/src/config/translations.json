@@ -3,6 +3,10 @@
 	"en": {
 		"companyName": "Aventine",
 
+		"menu.signout": "Sign out",
+
+		"footer.copyrights": "Copyright © 2017 Aventine Asia Limited. All rights reserved.",
+
 		"auth.emailLabel": "Email",
 		"auth.passwordLabel": "Password",
 		"auth.confirmPasswordLabel": "Confirm Your Password",
