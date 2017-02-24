@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import {connect} from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 
-import { restoreUserSession } from './actions/'
+import { closeDrawer, restoreUserSession } from './actions/'
 
 import './style/stylesheet.scss'
 
@@ -19,7 +19,8 @@ class App extends Component {
         this.props.restoreSession()
     }
 
-    requireAuth = (nextState, replace) => {
+    // onEnter={this.requireAuth}
+    requireAuth(nextState, replace) {
         if (!this.props.authenticated) {
             replace({
                 pathname: '/login',
@@ -31,19 +32,21 @@ class App extends Component {
     render() {
         const {
             intl,
-            appError
+            appError,
+            authenticated,
+            closeDrawer
         } = this.props
         
         return (
             <div className="pure-g">
                 <Header />
-                <div className="page">
+                <div className="page u-padding-md">
                     {appError &&
                         <p className="">{intl.messages[appError]}</p>
                     }
 
-                    <Router history={browserHistory}>
-                        <Route path="/" component={Home} onEnter={this.requireAuth} />
+                    <Router history={browserHistory} onUpdate={closeDrawer}>
+                        <Route path="/" component={Home} />
                         <Route path="/login" component={Login} />
                         <Route path="/register" component={Register} />
                         <Route path="/user-confirmation" component={UserConfrimation} />
@@ -53,6 +56,20 @@ class App extends Component {
             </div>
         )
     }
+}
+
+App.defaultProps = {
+    authenticated: false
+}
+
+App.propTypes = {
+    appError: PropTypes.string,
+    /**
+     * react-intl
+     */
+    intl: PropTypes.object.isRequired,
+    authenticated: PropTypes.bool,
+    closeDrawer: PropTypes.func
 }
 
 export const mapStateToProps = (state, props) => {
@@ -66,7 +83,8 @@ export const mapStateToProps = (state, props) => {
 
 export const mapDispatchToProps = (dispatch, props) => {
     return {
-        restoreSession: () => dispatch(restoreUserSession())
+        restoreSession: () => dispatch(restoreUserSession()),
+        closeDrawer: () => dispatch(closeDrawer())
     }
 }
 

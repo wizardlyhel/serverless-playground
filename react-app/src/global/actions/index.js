@@ -24,14 +24,10 @@ export const actionProxy = (payload) => {
     }
 }
 
-export const restoreUserSession = createAction('Restore user session', getUserSession, {
-    onSuccess: (result, getState) => {
-        browserHistory.push('/')
-    },
-    onFailure: (result, getState) => {
-        browserHistory.push('/login')
-    }
-})
+export const setDrawerState = createAction('Set drawer state')
+export const openDrawer = createAction('Open drawer')
+export const closeDrawer = createAction('Close drawer')
+export const restoreUserSession = createAction('Restore user session', getUserSession)
 
 export const signUp = createAction('Sign up', userSignUp, {
     onSuccess: () => {

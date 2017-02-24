@@ -2,6 +2,13 @@ body {
 	background-color: #f7931d;
 }
 
+.logo h1 {
+	background-image: url('/images/logo.png');
+	background-size: 60% auto;
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
 .page {
 	min-height: 350px;
 	background-color: rgba(255, 255, 2555, 0.95);

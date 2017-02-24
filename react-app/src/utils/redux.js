@@ -43,10 +43,6 @@ export const createAction = (description, payload = 'payload', initMeta) => {
 
     if (!payload || isString(payload)) {
         actionCreator = (args, meta) => {
-            invariant(isPlainObject(args), deline`
-                The ${initPayload.type} action is expected a plain object as first argument.
-            `);
-
             return {
                 type: initPayload.type,
                 payload: args,

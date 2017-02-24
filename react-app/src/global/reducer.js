@@ -5,6 +5,7 @@ import * as Immutable from 'immutable'
 import * as appActions from './actions/'
 
 const initialState = Immutable.fromJS({
+    drawerIsOpen: false,
     authenticated: false,
     formErrors: {},
     username: false
@@ -30,6 +31,15 @@ const handleFormState = (formName) => {
 
 // Reducers
 export default createReducers({
+    [appActions.setDrawerState]: (state, payload) => {
+        return state.setIn(['drawerIsOpen'], payload)
+    },
+    [appActions.openDrawer]: (state) => {
+        return state.setIn(['drawerIsOpen'], true)
+    },
+    [appActions.closeDrawer]: (state) => {
+        return state.setIn(['drawerIsOpen'], false)
+    },
     [appActions.restoreUserSession]: {
         failure: (state, { payload }) => {
             return setUserAuthenticationStatus(state, false)

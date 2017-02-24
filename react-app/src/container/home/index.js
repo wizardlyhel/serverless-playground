@@ -4,7 +4,7 @@ class Home extends Component {
     render() {
         return (
         	<div>
-	            <p>home</p>
+	            <p>Aventine is a financial services business that builds connections across international frontiers and creates exciting opportunities for its investors.</p>
             </div>
         );
     }
