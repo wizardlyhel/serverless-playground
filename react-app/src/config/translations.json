@@ -11,6 +11,7 @@
 		"auth.emailLabel": "Email",
 		"auth.passwordLabel": "Password",
 		"auth.confirmPasswordLabel": "Confirm Your Password",
+		"auth.forgotButton": "Forgot Password?",
 		"auth.signInButton": "Login",
 		"auth.signUpButton": "Create Account",
 		"auth.confirmationDescription": "Please enter the confirmation code sent to your email inbox:",

@@ -55,12 +55,13 @@ class Login extends Component {
                                 <RaisedButton type="submit" primary={true} label={intl.messages['auth.signInButton']} disabled={pristine || submitting || invalid} fullWidth={true} />
                             </div>
                         </form>
-                        <Divider />
-                        <div className="u-padding-top-lg">
-                            <Link to="/register">
-                                <RaisedButton secondary={true} label={intl.messages['auth.signUpButton']} fullWidth={true} />
-                            </Link>
-                        </div>
+                        <Divider className="u-margin-top-lg u-margin-bottom-lg"/>
+                        <Link to="/register">
+                            <RaisedButton secondary={true} label={intl.messages['auth.forgotButton']} fullWidth={true} />
+                        </Link>
+                        <Link to="/register">
+                            <RaisedButton className="u-margin-top-md" secondary={true} label={intl.messages['auth.signUpButton']} fullWidth={true} />
+                        </Link>
                     </div>
                 </div>
             </div>

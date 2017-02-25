@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import {connect} from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 
-import { closeDrawer, restoreUserSession } from './actions/'
+import { setDrawerState, restoreUserSession } from './actions/'
 
 import './style/stylesheet.scss'
 
@@ -84,7 +84,7 @@ export const mapStateToProps = (state, props) => {
 export const mapDispatchToProps = (dispatch, props) => {
     return {
         restoreSession: () => dispatch(restoreUserSession()),
-        closeDrawer: () => dispatch(closeDrawer())
+        closeDrawer: () => dispatch(setDrawerState(false))
     }
 }
 
