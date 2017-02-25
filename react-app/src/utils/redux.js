@@ -1,5 +1,3 @@
-import deline from 'deline';
-import invariant from 'invariant';
 import { handle } from 'redux-pack';
 import isString from 'lodash/isString';
 import isPlainObject from 'lodash/isPlainObject';

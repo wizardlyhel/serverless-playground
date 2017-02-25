@@ -33,7 +33,6 @@ class App extends Component {
         const {
             intl,
             appError,
-            authenticated,
             closeDrawer
         } = this.props
         

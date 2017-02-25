@@ -1,4 +1,4 @@
-import { createAction } from '../../utils/redux';
+import { createAction } from '../../utils/action-promise-redux/createAction';
 import { browserHistory } from 'react-router'
 import {
     getUserSession,

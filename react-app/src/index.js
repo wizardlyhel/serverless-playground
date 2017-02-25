@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-intl-redux'
 import { createStore, compose, applyMiddleware } from 'redux'
-import { middleware as reduxPackMiddleware } from 'redux-pack'
+import { middleware as actionPromiseReduxMiddleware } from './utils/action-promise-redux/middleware'
 import thunk from 'redux-thunk'
 import createLogger from 'redux-logger'
 
@@ -39,7 +39,7 @@ let store = createStore(
     rootReducer,
     initialState,
     composeEnhancers(
-        applyMiddleware(thunk, reduxPackMiddleware, logger)
+        applyMiddleware(thunk, actionPromiseReduxMiddleware, logger)
     )
 )
 
