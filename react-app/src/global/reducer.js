@@ -1,5 +1,5 @@
 // import { createReducers } from '../utils/redux';
-import { createReducersMap } from '../utils/action-promise-redux/reducerMap'
+import { createReducersMap, createDefaultReducers } from '../utils/action-promise-redux/reducerMap'
 import { handleError } from '../utils/errors';
 import * as Immutable from 'immutable'
 
@@ -58,9 +58,13 @@ export default createReducersMap([
     },
     {
         actionsMap: [
+            appActions.signUp.start,
             appActions.signUp.failed,
+            appActions.signUpConfirm.start,
             appActions.signUpConfirm.failed,
-            appActions.signIn.failed
+            appActions.signIn.start,
+            appActions.signIn.failed,
+            appActions.restoreUserSession.success
         ],
         handler: {
             reducer: formErrors,
@@ -82,37 +86,14 @@ export default createReducersMap([
                             formName: 'login'
                         }
                     default:
-                        return {
-                            err: payload, 
-                            formName: 'app'
-                        }
+                        return {}
                 }
             }
         }
-    },
-    {
-        actionsMap: [
-            appActions.restoreUserSession.success,
-            appActions.signUp.start,
-            appActions.signUpConfirm.start,
-            appActions.signIn.start
-        ],
-        handler: {
-            reducer: formErrors,
-            payloadTransform: () => ({})
-        }
     }
 ],{
-    authenticated: (state, payload) => {
-        return state.setIn([authenticated], payload)
-    },
-    drawerIsOpen: (state, payload) => {
-        return state.setIn([drawerIsOpen], payload)
-    },
+    ...createDefaultReducers(authenticated, drawerIsOpen, username),
     formErrors: (state, payload) => {
         return handleError(state, payload)
-    },
-    username: (state, payload) => {
-        return state.setIn([username], payload)
     }
 }, initialState)

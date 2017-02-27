@@ -30,3 +30,13 @@ export const createReducersMap = (actionsMapping, reducers, initialState) => {
         return state
     }
 }
+
+export const createDefaultReducers = (...handlers) => {
+    let reducers = {}
+    handlers.forEach((handler) => {
+        reducers[handler] = (state, payload) => {
+            return state.setIn([handler], payload)
+        }
+    })
+    return reducers
+}
