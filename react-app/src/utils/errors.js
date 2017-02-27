@@ -18,6 +18,6 @@ const errorCodeMapping = (err) => {
     return err
 }
 
-export const handleError = (state, payload) => {
-    return state.setIn(['formErrors'], payload ? errorCodeMapping(payload) : payload)
+export const handleError = (state, {err, formName}) => {
+    return state.setIn(['formErrors', formName], err ? errorCodeMapping(err) : err)
 }

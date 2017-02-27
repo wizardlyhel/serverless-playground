@@ -20,7 +20,9 @@ const initialState = Immutable.fromJS({
 export default createReducersMap([
     {
         actionsMap: [appActions.setDrawerState],
-        reducersMap: [drawerIsOpen]
+        handler: {
+            reducer: drawerIsOpen
+        }
     },
     {
         actionsMap: [
@@ -28,14 +30,20 @@ export default createReducersMap([
             appActions.signIn.failed,
             appActions.signOut.success
         ],
-        reducersMap: ['authenticationFailed']
+        handler: {
+            reducer: authenticated,
+            payloadTransform: () => (false)
+        }
     },
     {
         actionsMap: [
             appActions.restoreUserSession.success,
             appActions.signIn.success
         ],
-        reducersMap: [authenticated]
+        handler: {
+            reducer: authenticated,
+            payloadTransform: () => (true)
+        }
     },
     {
         actionsMap: [
@@ -44,7 +52,9 @@ export default createReducersMap([
             appActions.signUpConfirm.success,
             appActions.signIn.success
         ],
-        reducersMap: [username]
+        handler: {
+            reducer: username
+        }
     },
     {
         actionsMap: [
@@ -52,7 +62,33 @@ export default createReducersMap([
             appActions.signUpConfirm.failed,
             appActions.signIn.failed
         ],
-        reducersMap: [formErrors]
+        handler: {
+            reducer: formErrors,
+            payloadTransform: (type, payload) => {
+                switch(type) {
+                    case appActions.signUp.failed:
+                        return {
+                            err: payload, 
+                            formName: 'register'
+                        }
+                    case appActions.signUpConfirm.failed:
+                        return {
+                            err: payload, 
+                            formName: 'userConfirmation'
+                        }
+                    case appActions.signIn.failed:
+                        return {
+                            err: payload, 
+                            formName: 'login'
+                        }
+                    default:
+                        return {
+                            err: payload, 
+                            formName: 'app'
+                        }
+                }
+            }
+        }
     },
     {
         actionsMap: [
@@ -61,77 +97,22 @@ export default createReducersMap([
             appActions.signUpConfirm.start,
             appActions.signIn.start
         ],
-        reducersMap: ['clearFormErrors']
+        handler: {
+            reducer: formErrors,
+            payloadTransform: () => ({})
+        }
     }
 ],{
-    authenticated: (state) => {
-        return state.setIn([authenticated], true)
-    },
-    authenticationFailed: (state) => {
-        return state.setIn([authenticated], false)
+    authenticated: (state, payload) => {
+        return state.setIn([authenticated], payload)
     },
     drawerIsOpen: (state, payload) => {
         return state.setIn([drawerIsOpen], payload)
     },
-    clearFormErrors: (state) => {
-        return state.setIn([formErrors], {})
-    },
-    formErrors: (state, { payload }) => {
+    formErrors: (state, payload) => {
         return handleError(state, payload)
     },
-    username: (state, { payload }) => {
+    username: (state, payload) => {
         return state.setIn([username], payload)
     }
 }, initialState)
-
-// const setUserAuthenticationStatus = (state, status) => {
-//     return state.setIn(['authenticated'], status)
-// }
-
-// const handleFormState = (formName) => {
-//     return {
-//         start: (state) => {
-//             return handleError(state, formName, undefined)
-//         },
-//         failure: (state, { payload }) => {
-//             return handleError(state, formName, payload)
-//         },
-//         success: (state, { payload }) => {
-//             return state.setIn(['username'], payload)
-//         }
-//     }
-// }
-
-// // Reducers
-// export default createReducers({
-//     [appActions.setDrawerState]: (state, payload) => {
-//         return state.setIn(['drawerIsOpen'], payload)
-//     },
-//     [appActions.restoreUserSession]: {
-//         failure: (state, { payload }) => {
-//             return setUserAuthenticationStatus(state, false)
-//         },
-//         success: (state, { payload }) => {
-//             state = state.setIn(['username'], payload)
-//             return setUserAuthenticationStatus(state, true)
-//         }
-//     },
-//     [appActions.signUp]: handleFormState('register'),
-//     [appActions.signUpConfirm]: handleFormState('userConfirmation'),
-//     [appActions.signIn]: {
-//         start: (state) => {
-//             return handleError(state, 'login', undefined)
-//         },
-//         failure: (state, { payload }) => {
-//             state = setUserAuthenticationStatus(state, false)
-//             return handleError(state, 'login', payload)
-//         },
-//         success: (state, { payload }) => {
-//             state = state.setIn(['username'], payload)
-//             return setUserAuthenticationStatus(state, true)
-//         }
-//     },
-//     [appActions.signOut]: (state) => {
-//         return setUserAuthenticationStatus(state, false)
-//     }
-// }, initialState)

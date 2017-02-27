@@ -1,21 +1,18 @@
 // Stripped down version of https://github.com/lelandrichardson/redux-pack/blob/master/src/middleware.js
-import omit from 'lodash/omit';
-
 const handlePromise = (dispatch, getState, action) => {
     const { type, payload, meta } = action;
-    const newMeta = omit(meta, ['promise'])
 
     dispatch({
         type: `${type}|start`,
         payload: null,
-        newMeta
+        meta
     })
 
     const success = data => {
         dispatch({
             type: `${type}|success`,
             payload: data,
-            newMeta
+            meta
         })
     }
 
@@ -24,7 +21,7 @@ const handlePromise = (dispatch, getState, action) => {
             type: `${type}|failed`,
             payload: error,
             error: true,
-            newMeta
+            meta
         })
     }
 
