@@ -3,35 +3,44 @@ import isFunction from 'lodash/isFunction';
 import isUndefined from 'lodash/isUndefined';
 import invariant from 'invariant';
 
-export function createAction(type, payloadCreator = (arg) => (arg), metaCreator) {
-    invariant(
-        isFunction(payloadCreator),
-        'Expected payloadCreator to be a function, undefined or null'
-    );
-
+export function createAction(type, payloadCreator, metaCreator) {
     const actionCreator = (...args) => {
-        const hasError = args[0] instanceof Error;
-
-        const action = {
+        debugger
+        let action = {
             type
-        };
-
-        const payload = hasError ? args[0] : payloadCreator(...args);
-        if (!isUndefined(payload)) {
-            action.payload = payload;
         }
 
-        if (hasError || payload instanceof Error) {
-            // Handle FSA errors where the payload is an Error object. Set error.
-            action.error = true;
+        if (isFunction(payloadCreator)) {
+            action.payload = payloadCreator.bind(this, ...args)
+        } else {
+            action.payload = (...args)
         }
 
         if (isFunction(metaCreator)) {
-            action.meta = metaCreator(...args);
+            action.meta = metaCreator(...args)
         }
 
-        return action;
-    };
+        return action
+    }
+
+    actionCreator.toString = () => type.toString();
+
+    return actionCreator;
+}
+
+export function createPromisedAction(type, promise, metaCreator) {
+    const actionCreator = (...args) => {
+        let action = {
+            type,
+            payload: promise.bind(this, ...args).bind(this, ...args)
+        }
+
+        if (isFunction(metaCreator)) {
+            action.meta = metaCreator(...args)
+        }
+
+        return action
+    }
 
     actionCreator.toString = () => type.toString();
     actionCreator.start = `${type}|start`

@@ -97,6 +97,7 @@ const storeUserSession = (token) => {
 }
 
 export const userSignIn = (dispatch, getState, formInputs) => {
+    debugger
     return new Promise((resolve, reject) => {
         const authenticationDetails = new AuthenticationDetails({
             Username: formInputs.email,

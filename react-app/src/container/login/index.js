@@ -106,10 +106,7 @@ export const mapStateToProps = (state, props) => {
 
 export const mapDispatchToProps = (dispatch, props) => {
     return {
-        submitForm: (values) => dispatch(actionProxy({
-            action: signIn,
-            args: values
-        }))
+        submitForm: (values) => dispatch(signIn(values))
     }
 }
 
