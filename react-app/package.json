@@ -54,6 +54,7 @@
     "deline": "^1.0.4",
     "immutable": "^3.8.1",
     "invariant": "^2.2.2",
+    "lodash.omit": "^4.5.0",
     "material-ui": "^0.16.7",
     "node-sass": "^4.3.0",
     "react": "^15.4.2",

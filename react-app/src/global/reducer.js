@@ -1,4 +1,3 @@
-// import { createReducers } from '../utils/redux';
 import { createReducersMap, createDefaultReducers } from '../utils/action-promise-redux/reducerMap'
 import { handleError } from '../utils/errors';
 import * as Immutable from 'immutable'
@@ -95,5 +94,8 @@ export default createReducersMap([
     ...createDefaultReducers(authenticated, drawerIsOpen, username),
     formErrors: (state, payload) => {
         return handleError(state, payload)
+    },
+    navigate: (state) => {
+    	return state
     }
 }, initialState)

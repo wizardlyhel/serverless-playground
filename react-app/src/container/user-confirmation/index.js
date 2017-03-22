@@ -8,7 +8,7 @@ import {
 } from 'redux-form-material-ui'
 import * as formValidationRules from '../../utils/form-validation'
 
-import { actionProxy, signUpConfirm, resendConfirmation } from '../../global/actions/'
+import { signUpConfirm, resendConfirmation } from '../../global/actions/'
 
 class UserConfirmation extends Component {
     constructor(props) {
@@ -121,13 +121,8 @@ export const mapStateToProps = (state, props) => {
 
 export const mapDispatchToProps = (dispatch, props) => {
     return {
-        submitForm: (values) => dispatch(actionProxy({
-            action: signUpConfirm,
-            args: values
-        })),
-        resendConfirmationCode: () => dispatch(actionProxy({
-            action: resendConfirmation
-        }))
+        submitForm: (values) => dispatch(signUpConfirm(values)),
+        resendConfirmationCode: () => dispatch(resendConfirmation())
     }
 }
 

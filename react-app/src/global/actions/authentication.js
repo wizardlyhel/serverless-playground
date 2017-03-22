@@ -1,3 +1,4 @@
+import { browserHistory } from 'react-router'
 import { Config, CognitoIdentityCredentials } from "aws-sdk"
 import {
     CognitoUserPool,
@@ -5,6 +6,22 @@ import {
     AuthenticationDetails,
     CognitoUser
 } from "amazon-cognito-identity-js";
+
+const navigate = (page) => {
+    switch(page) {
+        case 'home':
+            browserHistory.push('/')
+            return
+        case 'login':
+            browserHistory.push('/login')
+            return
+        case 'userConfirm':
+            browserHistory.push('/user-confirmation')
+            return
+        default:
+            return
+    }
+}
 
 const config = {
     region: 'us-west-2',
@@ -55,35 +72,42 @@ export const userSignUp = (formInputs) => {
 
         userPool.signUp(formInputs.email, formInputs.password, attributeList, null, (err, result) => {
             if (err) {
-                return reject(err)
+                reject(err)
             }
-            return resolve(formInputs.email)
+            resolve(formInputs.email)
+            navigate('userConfirm')
         })
     })
 }
 
-export const confirmUser = (dispatch, getState, formInputs) => {
-    return new Promise((resolve, reject) => {
-        const cognitoUser = getCognitoUser(reject, getState, formInputs && formInputs.email)
-        cognitoUser.confirmRegistration(formInputs.confirmationCode, true, function(err, result) {
-            if (err) {
-                return reject(err)
-            }
-            return resolve(cognitoUser.getUsername())
-        });
-    })
+export const confirmUser = (formInputs) => {
+    return (dispatch, getState) => {
+        return new Promise((resolve, reject) => {
+            const cognitoUser = getCognitoUser(reject, getState, formInputs && formInputs.email)
+            cognitoUser.confirmRegistration(formInputs.confirmationCode, true, function(err, result) {
+                if (err) {
+                    reject(err)
+                    navigate('login')
+                }
+                resolve(cognitoUser.getUsername())
+                navigate('home')
+            })
+        })
+    }
 }
 
-export const resendConfirmationCode = (dispatch, getState) => {
-    return new Promise((resolve, reject) => {
-        const cognitoUser = getCognitoUser(reject, getState)
-        cognitoUser.resendConfirmationCode(function(err, result) {
-            if (err) {
-                return reject(err)
-            }
-            return resolve(cognitoUser.getUsername())
-        });
-    })
+export const resendConfirmationCode = () => {
+    return (dispatch, getState) => {
+        return new Promise((resolve, reject) => {
+            const cognitoUser = getCognitoUser(reject, getState)
+            cognitoUser.resendConfirmationCode(function(err, result) {
+                if (err) {
+                    reject(err)
+                }
+                resolve(cognitoUser.getUsername())
+            });
+        })
+    }
 }
 
 const storeUserSession = (token) => {
@@ -96,35 +120,40 @@ const storeUserSession = (token) => {
     });
 }
 
-export const userSignIn = (dispatch, getState, formInputs) => {
-    debugger
-    return new Promise((resolve, reject) => {
-        const authenticationDetails = new AuthenticationDetails({
-            Username: formInputs.email,
-            Password: formInputs.password,
-        });
+export const userSignIn = (formInputs) => {
+    return (dispatch, getState) => {
+        return new Promise((resolve, reject) => {
+            const authenticationDetails = new AuthenticationDetails({
+                Username: formInputs.email,
+                Password: formInputs.password,
+            });
 
-        const cognitoUser = getCognitoUser(reject, getState, formInputs && formInputs.email)
+            const cognitoUser = getCognitoUser(reject, getState, formInputs && formInputs.email)
 
-        cognitoUser.authenticateUser(authenticationDetails, {
-            onSuccess: function (result) {
-                storeUserSession(result.getAccessToken().getJwtToken())
-                resolve(cognitoUser.getUsername())
-            },
-            onFailure: function(err) {
-                reject(err)
-            },
+            cognitoUser.authenticateUser(authenticationDetails, {
+                onSuccess: function (result) {
+                    storeUserSession(result.getAccessToken().getJwtToken())
+                    resolve(cognitoUser.getUsername())
+                    navigate('home')
+                },
+                onFailure: function(err) {
+                    reject(err)
+                },
 
+            })
         })
-    })
+    }
 }
 
-export const userSignOut = (dispatch, getState) => {
-    return new Promise((resolve, reject) => {
-        const cognitoUser = getCognitoUser(reject, getState)
-        cognitoUser.signOut()
-        resolve()
-    })
+export const userSignOut = () => {
+    return (dispatch, getState) => {
+        return new Promise((resolve, reject) => {
+            const cognitoUser = getCognitoUser(reject, getState)
+            cognitoUser.signOut()
+            resolve()
+            navigate('login')
+        })
+    }
 }
 
 export const getUserSession = () => {
@@ -134,11 +163,49 @@ export const getUserSession = () => {
             cognitoUser.getSession((err, session) => {
                 if (err) {
                     reject(err)
+                    navigate('login')
                 }
                 storeUserSession(session.getIdToken().getJwtToken())
                 resolve(cognitoUser.getUsername())
+                navigate('home')
             })
+        } else {
+            reject()
+            navigate('login')
         }
-        reject()
     })
 }
+
+    // {
+    //     actionsMap: [
+    //         appActions.signIn.success,
+    //         appActions.signIn.failed,
+    //         appActions.signOut,
+    //         appActions.signUp.success,
+    //         appActions.signUpConfirm.success,
+    //         appActions.restoreUserSession.success,
+    //         appActions.restoreUserSession.failed
+    //     ],
+    //     handler: {
+    //         reducer: authenticated,
+    //         payloadTransform: (type) => {
+    //             switch(type) {
+    //                 case appActions.signIn.success:
+    //                 case appActions.signUpConfirm.success:
+    //                 case appActions.restoreUserSession.success:
+    //                     browserHistory.push('/')
+    //                     return
+    //                 case appActions.signIn.failed:
+    //                 case appActions.signOut:
+    //                 case appActions.restoreUserSession.failed:
+    //                     browserHistory.push('/login')
+    //                     return
+    //                 case appActions.signUp.success:
+    //                     browserHistory.push('/user-confirmation')
+    //                     return
+    //                 default:
+    //                     return
+    //             }
+    //         }
+    //     }
+    // },

@@ -5,7 +5,6 @@ import invariant from 'invariant';
 
 export function createAction(type, payloadCreator, metaCreator) {
     const actionCreator = (...args) => {
-        debugger
         let action = {
             type
         }
@@ -13,7 +12,7 @@ export function createAction(type, payloadCreator, metaCreator) {
         if (isFunction(payloadCreator)) {
             action.payload = payloadCreator.bind(this, ...args)
         } else {
-            action.payload = (...args)
+            action.payload = args[0]
         }
 
         if (isFunction(metaCreator)) {
@@ -32,11 +31,20 @@ export function createPromisedAction(type, promise, metaCreator) {
     const actionCreator = (...args) => {
         let action = {
             type,
-            payload: promise.bind(this, ...args).bind(this, ...args)
+            payload: promise.bind(this, ...args),
+            meta: {
+                'action-promise-redux': {
+                    type: 'promise'
+                }
+            }
         }
 
         if (isFunction(metaCreator)) {
-            action.meta = metaCreator(...args)
+            const moreMeta = metaCreator(...args)
+            action.meta = {
+                ...action.meta,
+                ...moreMeta
+            }
         }
 
         return action

@@ -1,39 +1,47 @@
+import omit from 'lodash.omit';
 // Stripped down version of https://github.com/lelandrichardson/redux-pack/blob/master/src/middleware.js
 const handlePromise = (dispatch, getState, action) => {
     const { type, payload, meta } = action;
     const error = payload instanceof Error ? true : undefined
 
-debugger
-    const resultPayload = payload(dispatch, getState)
-    if (resultPayload.then) {
-        dispatch({
-            type: `${type}|start`,
-            payload: null,
-            error,
-            meta
-        })
-        
-        const success = data => {
-            dispatch({
-                type: `${type}|success`,
-                payload: data,
-                error,
-                meta
-            })
+    if (typeof payload === 'function') {
+        let resultPayload = payload(dispatch, getState)
+        while (typeof resultPayload === 'function' && !resultPayload.then) {
+          resultPayload = resultPayload(dispatch, getState);
         }
 
-        const failure = error => {
-            dispatch({
-                type: `${type}|failed`,
-                payload: error,
-                error,
-                meta
-            })
-        }
+        const newMeta = omit(meta, 'action-promise-redux')
 
-        return resultPayload.then(success, failure)
+        if (resultPayload.then) {
+            dispatch({
+                type: `${type}|start`,
+                payload: null,
+                error,
+                newMeta
+            })
+            
+            const success = data => {
+                dispatch({
+                    type: `${type}|success`,
+                    payload: data,
+                    error,
+                    newMeta
+                })
+            }
+
+            const failure = error => {
+                dispatch({
+                    type: `${type}|failed`,
+                    payload: error,
+                    error,
+                    newMeta
+                })
+            }
+
+            return resultPayload.then(success, failure)
+        }
     } else {
-        return resultPayload
+        return payload
     }
 }
 
@@ -44,15 +52,15 @@ export const middleware = ({ dispatch, getState }) => next => action => {
         return null;
     }
 
+    // this is the convention-based promise middleware. Ideally, all "async actions" would go through
+    // this pathway.
+    if (action.meta && action.meta['action-promise-redux'] && action.meta['action-promise-redux'].type === 'promise') {
+        return handlePromise(dispatch, getState, action);
+    }
+
     // react-thunk path
     if (typeof action === 'function') {
       return action(dispatch, getState);
-    }
-
-    // this is the convention-based promise middleware. Ideally, all "async actions" would go through
-    // this pathway.
-    if (typeof action.payload === 'function') {
-        return handlePromise(dispatch, getState, action);
     }
 
     // this is the "vanilla redux" pathway. These are plain old actions that will get sent to reducers

@@ -6,7 +6,7 @@ import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 
-import { setDrawerState, actionProxy, signOut } from '../../global/actions/'
+import { setDrawerState, signOut } from '../../global/actions/'
 
 class Header extends Component {
     handleTitleClick = () => {
@@ -78,7 +78,7 @@ export const mapStateToProps = (state, props) => {
 
 export const mapDispatchToProps = (dispatch, props) => {
     return {
-        signOut: () => dispatch(actionProxy({action: signOut})),
+        signOut: () => dispatch(signOut()),
         setDrawerState: (isOpen) => dispatch(setDrawerState(isOpen))
     }
 }
