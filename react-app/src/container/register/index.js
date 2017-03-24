@@ -90,7 +90,7 @@ const RegisterForm = reduxForm({
 })(Register);
 
 export const mapStateToProps = (state, props) => {
-    const registerError = state.app.getIn(['formErrors'])[formIdentifier]
+    const registerError = state.app.getIn(['formErrors', formIdentifier])
     return {
         intl: state.intl,
         formError: registerError ? registerError : undefined

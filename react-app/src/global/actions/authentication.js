@@ -134,7 +134,9 @@ export const userSignIn = (formInputs) => {
                 onSuccess: function (result) {
                     storeUserSession(result.getAccessToken().getJwtToken())
                     resolve(cognitoUser.getUsername())
-                    navigate('home')
+                        .then(() => {
+                            navigate('home')
+                        })
                 },
                 onFailure: function(err) {
                     reject(err)
@@ -175,37 +177,3 @@ export const getUserSession = () => {
         }
     })
 }
-
-    // {
-    //     actionsMap: [
-    //         appActions.signIn.success,
-    //         appActions.signIn.failed,
-    //         appActions.signOut,
-    //         appActions.signUp.success,
-    //         appActions.signUpConfirm.success,
-    //         appActions.restoreUserSession.success,
-    //         appActions.restoreUserSession.failed
-    //     ],
-    //     handler: {
-    //         reducer: authenticated,
-    //         payloadTransform: (type) => {
-    //             switch(type) {
-    //                 case appActions.signIn.success:
-    //                 case appActions.signUpConfirm.success:
-    //                 case appActions.restoreUserSession.success:
-    //                     browserHistory.push('/')
-    //                     return
-    //                 case appActions.signIn.failed:
-    //                 case appActions.signOut:
-    //                 case appActions.restoreUserSession.failed:
-    //                     browserHistory.push('/login')
-    //                     return
-    //                 case appActions.signUp.success:
-    //                     browserHistory.push('/user-confirmation')
-    //                     return
-    //                 default:
-    //                     return
-    //             }
-    //         }
-    //     }
-    // },

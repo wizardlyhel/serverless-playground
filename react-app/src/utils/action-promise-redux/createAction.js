@@ -53,7 +53,7 @@ export function createPromisedAction(type, promise, metaCreator) {
     actionCreator.toString = () => type.toString();
     actionCreator.start = `${type}|start`
     actionCreator.success = `${type}|success`
-    actionCreator.failure = `${type}|failure`
+    actionCreator.failed = `${type}|failed`
 
     return actionCreator;
 }

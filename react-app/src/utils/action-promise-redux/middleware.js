@@ -17,7 +17,7 @@ const handlePromise = (dispatch, getState, action) => {
                 type: `${type}|start`,
                 payload: null,
                 error,
-                newMeta
+                meta: newMeta
             })
             
             const success = data => {
@@ -25,7 +25,7 @@ const handlePromise = (dispatch, getState, action) => {
                     type: `${type}|success`,
                     payload: data,
                     error,
-                    newMeta
+                    meta: newMeta
                 })
             }
 
@@ -34,7 +34,7 @@ const handlePromise = (dispatch, getState, action) => {
                     type: `${type}|failed`,
                     payload: error,
                     error,
-                    newMeta
+                    meta: newMeta
                 })
             }
 

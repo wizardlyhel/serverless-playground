@@ -14,14 +14,10 @@ import Login from '../container/login'
 import Register from '../container/register'
 import UserConfrimation from '../container/user-confirmation'
 
-class App extends Component {
-    componentDidMount() {
-        this.props.restoreSession()
-    }
-
+const getRoutes = (store, closeDrawer) => {
     // onEnter={this.requireAuth}
-    requireAuth(nextState, replace) {
-        if (!this.props.authenticated) {
+    const requireAuth = (nextState, replace) => {
+        if (!store.getState().app.getIn(['authenticated'])) {
             replace({
                 pathname: '/login',
                 state: { nextPathname: nextState.location.pathname }
@@ -29,11 +25,27 @@ class App extends Component {
         }
     }
 
+    return (
+         <Router history={browserHistory} onUpdate={closeDrawer}>
+            <Route path="/" component={Home} onEnter={requireAuth} />
+            <Route path="login" component={Login} />
+            <Route path="register" component={Register} />
+            <Route path="user-confirmation" component={UserConfrimation} />
+        </Router>
+    )
+}
+
+class App extends Component {
+    componentDidMount() {
+        this.props.restoreSession()
+    }
+
     render() {
         const {
             intl,
             appError,
-            closeDrawer
+            closeDrawer,
+            store
         } = this.props
         
         return (
@@ -43,22 +55,12 @@ class App extends Component {
                     {appError &&
                         <p className="">{intl.messages[appError]}</p>
                     }
-
-                    <Router history={browserHistory} onUpdate={closeDrawer}>
-                        <Route path="/" component={Home} />
-                        <Route path="/login" component={Login} />
-                        <Route path="/register" component={Register} />
-                        <Route path="/user-confirmation" component={UserConfrimation} />
-                    </Router>
+                    { getRoutes(store, closeDrawer) }
                 </div>
                 <Footer />
             </div>
         )
     }
-}
-
-App.defaultProps = {
-    authenticated: false
 }
 
 App.propTypes = {
@@ -67,14 +69,13 @@ App.propTypes = {
      * react-intl
      */
     intl: PropTypes.object.isRequired,
-    authenticated: PropTypes.bool,
-    closeDrawer: PropTypes.func
+    closeDrawer: PropTypes.func,
+    store: PropTypes.object
 }
 
 export const mapStateToProps = (state, props) => {
     const appError = state.app.getIn(['formErrors'])['app']
     return {
-        authenticated: state.app.getIn(['authenticated']),
         intl: state.intl,
         appError: appError ? appError : undefined
     }

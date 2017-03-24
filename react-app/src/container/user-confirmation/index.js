@@ -111,7 +111,7 @@ const UserConfirmationForm = reduxForm({
 })(UserConfirmation);
 
 export const mapStateToProps = (state, props) => {
-    const userConfirmationError = state.app.getIn(['formErrors'])[formIdentifier]
+    const userConfirmationError = state.app.getIn(['formErrors', formIdentifier])
     return {
         intl: state.intl,
         formError: userConfirmationError ? userConfirmationError : undefined,

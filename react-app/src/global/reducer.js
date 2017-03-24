@@ -1,5 +1,5 @@
 import { createReducersMap, createDefaultReducers } from '../utils/action-promise-redux/reducerMap'
-import { handleError } from '../utils/errors';
+import { handleError, createErrorPayload } from '../utils/errors';
 import * as Immutable from 'immutable'
 
 import * as appActions from './actions/'
@@ -57,6 +57,15 @@ export default createReducersMap([
     },
     {
         actionsMap: [
+            appActions.signOut.success
+        ],
+        handler: {
+            reducer: username,
+            payloadTransform: () => (false)
+        }
+    },
+    {
+        actionsMap: [
             appActions.signUp.start,
             appActions.signUp.failed,
             appActions.signUpConfirm.start,
@@ -70,20 +79,11 @@ export default createReducersMap([
             payloadTransform: (type, payload) => {
                 switch(type) {
                     case appActions.signUp.failed:
-                        return {
-                            err: payload, 
-                            formName: 'register'
-                        }
+                    	return createErrorPayload('register', payload)
                     case appActions.signUpConfirm.failed:
-                        return {
-                            err: payload, 
-                            formName: 'userConfirmation'
-                        }
+                    	return createErrorPayload('userConfirmation', payload)
                     case appActions.signIn.failed:
-                        return {
-                            err: payload, 
-                            formName: 'login'
-                        }
+                    	return createErrorPayload('login', payload)
                     default:
                         return {}
                 }
@@ -94,8 +94,5 @@ export default createReducersMap([
     ...createDefaultReducers(authenticated, drawerIsOpen, username),
     formErrors: (state, payload) => {
         return handleError(state, payload)
-    },
-    navigate: (state) => {
-    	return state
     }
 }, initialState)

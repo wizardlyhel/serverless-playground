@@ -18,7 +18,7 @@ injectTapEventPlugin();
 const Root = () => (
     <Provider store={store}>
         <MuiThemeProvider muiTheme={muiTheme}>
-            <App />
+            <App store={store} />
         </MuiThemeProvider>
     </Provider>
 );

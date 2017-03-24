@@ -96,8 +96,7 @@ const LoginForm = reduxForm({
 })(Login);
 
 export const mapStateToProps = (state, props) => {
-    const loginError = state.app.getIn(['formErrors'])[formIdentifier]
-
+    const loginError = state.app.getIn(['formErrors', formIdentifier])
     return {
         intl: state.intl,
         formError: loginError ? loginError : undefined
