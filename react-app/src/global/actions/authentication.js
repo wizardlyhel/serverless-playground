@@ -80,34 +80,30 @@ export const userSignUp = (formInputs) => {
     })
 }
 
-export const confirmUser = (formInputs) => {
-    return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
-            const cognitoUser = getCognitoUser(reject, getState, formInputs && formInputs.email)
-            cognitoUser.confirmRegistration(formInputs.confirmationCode, true, function(err, result) {
-                if (err) {
-                    reject(err)
-                    navigate('login')
-                }
-                resolve(cognitoUser.getUsername())
-                navigate('home')
-            })
+export const confirmUser = (formInputs) => (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+        const cognitoUser = getCognitoUser(reject, getState, formInputs && formInputs.email)
+        cognitoUser.confirmRegistration(formInputs.confirmationCode, true, function(err, result) {
+            if (err) {
+                reject(err)
+                navigate('login')
+            }
+            resolve(cognitoUser.getUsername())
+            navigate('home')
         })
-    }
+    })
 }
 
-export const resendConfirmationCode = () => {
-    return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
-            const cognitoUser = getCognitoUser(reject, getState)
-            cognitoUser.resendConfirmationCode(function(err, result) {
-                if (err) {
-                    reject(err)
-                }
-                resolve(cognitoUser.getUsername())
-            });
-        })
-    }
+export const resendConfirmationCode = () => (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+        const cognitoUser = getCognitoUser(reject, getState)
+        cognitoUser.resendConfirmationCode(function(err, result) {
+            if (err) {
+                reject(err)
+            }
+            resolve(cognitoUser.getUsername())
+        });
+    })
 }
 
 const storeUserSession = (token) => {
@@ -120,42 +116,32 @@ const storeUserSession = (token) => {
     });
 }
 
-export const userSignIn = (formInputs) => {
-    return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
-            const authenticationDetails = new AuthenticationDetails({
-                Username: formInputs.email,
-                Password: formInputs.password,
-            });
+export const userSignIn = (formInputs) => (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+        const authenticationDetails = new AuthenticationDetails({
+            Username: formInputs.email,
+            Password: formInputs.password,
+        });
 
-            const cognitoUser = getCognitoUser(reject, getState, formInputs && formInputs.email)
+        const cognitoUser = getCognitoUser(reject, getState, formInputs && formInputs.email)
 
-            cognitoUser.authenticateUser(authenticationDetails, {
-                onSuccess: function (result) {
-                    storeUserSession(result.getAccessToken().getJwtToken())
-                    resolve(cognitoUser.getUsername())
-                        .then(() => {
-                            navigate('home')
-                        })
-                },
-                onFailure: function(err) {
-                    reject(err)
-                },
-
-            })
+        cognitoUser.authenticateUser(authenticationDetails, {
+            onSuccess: function (result) {
+                storeUserSession(result.getAccessToken().getJwtToken())
+                resolve(cognitoUser.getUsername())
+            },
+            onFailure: reject
         })
-    }
+    })
 }
 
-export const userSignOut = () => {
-    return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
-            const cognitoUser = getCognitoUser(reject, getState)
-            cognitoUser.signOut()
-            resolve()
-            navigate('login')
-        })
-    }
+export const userSignOut = () => (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+        const cognitoUser = getCognitoUser(reject, getState)
+        cognitoUser.signOut()
+        resolve()
+        navigate('login')
+    })
 }
 
 export const getUserSession = () => {
@@ -169,11 +155,9 @@ export const getUserSession = () => {
                 }
                 storeUserSession(session.getIdToken().getJwtToken())
                 resolve(cognitoUser.getUsername())
-                navigate('home')
             })
         } else {
             reject()
-            navigate('login')
         }
     })
 }

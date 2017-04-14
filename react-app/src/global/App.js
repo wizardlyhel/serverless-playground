@@ -4,7 +4,7 @@ import { Router, Route, browserHistory } from 'react-router'
 
 import { setDrawerState, restoreUserSession } from './actions/'
 
-import './style/stylesheet.scss'
+import Stylesheet from './style/stylesheet.scss'    // eslint-disable-line no-unused-vars
 
 import Header from './partials/header'
 import Footer from './partials/footer'
@@ -14,10 +14,15 @@ import Login from '../container/login'
 import Register from '../container/register'
 import UserConfrimation from '../container/user-confirmation'
 
+const publicRoutes = [
+    '/login',
+    '/register',
+    '/user-confirmation'
+]
+
 const getRoutes = (store, closeDrawer) => {
-    // onEnter={this.requireAuth}
     const requireAuth = (nextState, replace) => {
-        if (!store.getState().app.getIn(['authenticated'])) {
+        if (!store.getState().app.getIn(['authenticated']) && publicRoutes.indexOf(nextState.location.pathname) === -1) {
             replace({
                 pathname: '/login',
                 state: { nextPathname: nextState.location.pathname }
@@ -38,6 +43,13 @@ const getRoutes = (store, closeDrawer) => {
 class App extends Component {
     componentDidMount() {
         this.props.restoreSession()
+    }
+
+    componentWillReceiveProps(nextProps) {
+        // Navigate to root when authenticated
+        if (this.props.authenticated !== nextProps.authenticated && nextProps.authenticated) {
+            browserHistory.push('/')
+        }
     }
 
     render() {
@@ -74,10 +86,11 @@ App.propTypes = {
 }
 
 export const mapStateToProps = (state, props) => {
-    const appError = state.app.getIn(['formErrors'])['app']
+    const appError = state.app.getIn(['formErrors', 'app'])
     return {
         intl: state.intl,
-        appError: appError ? appError : undefined
+        appError: appError ? appError : undefined,
+        authenticated: state.app.getIn(['authenticated'])
     }
 }
 

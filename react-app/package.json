@@ -48,7 +48,7 @@
     "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
-    "amazon-cognito-identity-js": "^1.12.0",
+    "amazon-cognito-identity-js": "^1.16.0",
     "aws-sdk": "^2.10.0",
     "classnames": "^2.2.5",
     "deline": "^1.0.4",
@@ -79,6 +79,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
+    "push:dev": "npm run build && aws s3 cp build s3://stage.aventine.asia --recursive --profile serverless-admin",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {

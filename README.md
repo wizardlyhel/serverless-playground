@@ -1,9 +1,6 @@
 # serverless-playground
-Testing out serverless framework
 
-Steps
-
-Front-end: Nextjs app (react and redux)
+Front-end: React app
 
 - use cognito js SDK to establish authentication
 
@@ -18,8 +15,7 @@ Require:
 - Lambda function querys DynamoDB
 
 
-Authentication
+Resource
 
-- Google, Facebook, Amazon, Custom
-- Custom requires storing user/pass
-
+https://medium.com/@omgwtfmarc/deploying-create-react-app-to-s3-or-cloudfront-48dae4ce0af
+https://blog.jpterry.com/howto/2016/02/02/secure-static-hosting-w-s3-cloudfront-acm.html
