@@ -1,13 +1,18 @@
 {
 
 	"en": {
-		"companyName": "Aventine",
+		"companyName": "Obelisk Global",
 
 		"menu.signin": "Sign in",
 		"menu.signout": "Sign out",
 
-		"footer.copyrights": "Copyright © 2017 Aventine Asia Limited. All rights reserved.",
+		"footer.copyrights": "Copyright © 2017 Obelisk Global Limited. All rights reserved.",
 
+		"auth.requestMoreInfo": "Please enter the following information:",
+		"auth.firstnameLabel": "First Name",
+		"auth.lastnameLabel": "Last Name",
+		"auth.addressLabel": "Address",
+		"auth.phoneLabel": "Phone Number",
 		"auth.emailLabel": "Email",
 		"auth.passwordLabel": "Password",
 		"auth.confirmPasswordLabel": "Confirm Your Password",
@@ -37,7 +42,7 @@
 		"awsError.codeMismatch": "Invalid verification code provided, please try again."
 
 	},
-	"zh": {
-		"login": "Chinese Login"
+	"zh-cn": {
+		"companyName": "Obelisk Global"
 	}
 }

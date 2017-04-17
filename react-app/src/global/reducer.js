@@ -6,11 +6,13 @@ import * as appActions from './actions/'
 
 const drawerIsOpen = 'drawerIsOpen'
 const authenticated = 'authenticated'
+const isGuest = 'isGuest'
 const formErrors = 'formErrors'
 const username = 'username'
 
 const initialState = Immutable.fromJS({
     [authenticated]: false,
+    [isGuest]: false,
     [drawerIsOpen]: false,
     [formErrors]: {},
     [username]: false
@@ -21,6 +23,24 @@ export default createReducersMap([
         actionsMap: [appActions.setDrawerState],
         handler: {
             reducer: drawerIsOpen
+        }
+    },
+    {
+        actionsMap: [
+            appActions.guestSignUp.success
+        ],
+        handler: {
+            reducer: isGuest,
+            payloadTransform: () => (true)
+        }
+    },
+        {
+        actionsMap: [
+            appActions.signOut.success
+        ],
+        handler: {
+            reducer: isGuest,
+            payloadTransform: () => (false)
         }
     },
     {
@@ -37,7 +57,8 @@ export default createReducersMap([
     {
         actionsMap: [
             appActions.restoreUserSession.success,
-            appActions.signIn.success
+            appActions.signIn.success,
+            appActions.guestSignIn.success
         ],
         handler: {
             reducer: authenticated,
@@ -49,10 +70,20 @@ export default createReducersMap([
             appActions.restoreUserSession.success,
             appActions.signUp.success,
             appActions.signUpConfirm.success,
-            appActions.signIn.success
+            appActions.signIn.success,
+            appActions.guestSignIn.success,
+            appActions.guestSignIn.failed
         ],
         handler: {
-            reducer: username
+            reducer: username,
+            payloadTransform: (type, payload) => {
+                switch(type) {
+                    case appActions.guestSignIn.failed:
+                        return payload.username
+                    default:
+                        return payload
+                }
+            }
         }
     },
     {
@@ -72,6 +103,8 @@ export default createReducersMap([
             appActions.signUpConfirm.failed,
             appActions.signIn.start,
             appActions.signIn.failed,
+            appActions.signIn.start,
+            appActions.guestSignIn.failed,
             appActions.restoreUserSession.success
         ],
         handler: {
@@ -84,6 +117,8 @@ export default createReducersMap([
                     	return createErrorPayload('userConfirmation', payload)
                     case appActions.signIn.failed:
                     	return createErrorPayload('login', payload)
+                    case appActions.guestSignIn.failed:
+                        return createErrorPayload('login', payload)
                     default:
                         return {}
                 }
@@ -91,7 +126,7 @@ export default createReducersMap([
         }
     }
 ],{
-    ...createDefaultReducers(authenticated, drawerIsOpen, username),
+    ...createDefaultReducers(authenticated, drawerIsOpen, username, isGuest),
     formErrors: (state, payload) => {
         return handleError(state, payload)
     }

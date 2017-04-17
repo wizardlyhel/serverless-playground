@@ -7,6 +7,8 @@ import {
     CognitoUser
 } from "amazon-cognito-identity-js";
 
+import { signIn } from '../../global/actions/'
+
 const navigate = (page) => {
     switch(page) {
         case 'home':
@@ -15,6 +17,9 @@ const navigate = (page) => {
         case 'login':
             browserHistory.push('/login')
             return
+        case 'accessInfo':
+            browserHistory.push('/access-info')
+            return
         case 'userConfirm':
             browserHistory.push('/user-confirmation')
             return
@@ -22,6 +27,8 @@ const navigate = (page) => {
             return
     }
 }
+
+const guestPassword = 'guestUser1!'
 
 const config = {
     region: 'us-west-2',
@@ -64,6 +71,16 @@ const getCognitoUser = (reject, getState, email) => {
     return cognitoUser
 }
 
+const storeUserSession = (token) => {
+    // Store access token
+    Config.credentials = new CognitoIdentityCredentials({
+        IdentityPoolId : config.IdentityPoolId,
+        Logins : {
+            [`cognito-idp.${config.region}.amazonaws.com/${config.UserPoolId}`]: token
+        }
+    });
+}
+
 export const userSignUp = (formInputs) => {
     return new Promise((resolve, reject) => {
         const attributeList = [
@@ -80,6 +97,26 @@ export const userSignUp = (formInputs) => {
     })
 }
 
+export const guestUserSignUp = (formInputs) => (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+        const email = getState().app.getIn(['username'])
+        const attributeList = [
+            cognitoUserAttribute('email', email),
+            cognitoUserAttribute('given_name', formInputs.firstname),
+            cognitoUserAttribute('family_name',formInputs.lastname),
+            cognitoUserAttribute('address', formInputs.address)
+        ]
+
+        userPool.signUp(email, guestPassword, attributeList, null, (err, result) => {
+            if (err) {
+                reject(err)
+            }
+            resolve(email)
+            navigate('userConfirm')
+        })
+    })
+}
+
 export const confirmUser = (formInputs) => (dispatch, getState) => {
     return new Promise((resolve, reject) => {
         const cognitoUser = getCognitoUser(reject, getState, formInputs && formInputs.email)
@@ -88,8 +125,16 @@ export const confirmUser = (formInputs) => (dispatch, getState) => {
                 reject(err)
                 navigate('login')
             }
-            resolve(cognitoUser.getUsername())
-            navigate('home')
+
+            if (getState().app.getIn(['isGuest'])) {
+                dispatch(signIn({
+                    email: formInputs.email,
+                    password: guestPassword
+                }))
+            } else {
+                resolve(cognitoUser.getUsername())
+                navigate('home')
+            }
         })
     })
 }
@@ -106,14 +151,33 @@ export const resendConfirmationCode = () => (dispatch, getState) => {
     })
 }
 
-const storeUserSession = (token) => {
-    // Store access token
-    Config.credentials = new CognitoIdentityCredentials({
-        IdentityPoolId : config.IdentityPoolId,
-        Logins : {
-            [`cognito-idp.${config.region}.amazonaws.com/${config.UserPoolId}`]: token
-        }
-    });
+export const guestUserSignIn = (formInputs) => (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+        const authenticationDetails = new AuthenticationDetails({
+            Username: formInputs.email,
+            Password: guestPassword,
+        });
+
+        const cognitoUser = getCognitoUser(reject, getState, formInputs && formInputs.email)
+
+        cognitoUser.authenticateUser(authenticationDetails, {
+            onSuccess: function (result) {
+                storeUserSession(result.getAccessToken().getJwtToken())
+                resolve(cognitoUser.getUsername())
+            },
+            onFailure: function (err) {
+                if (err.code === 'UserNotFoundException') {
+                    reject({
+                        username: formInputs.email,
+                        err
+                    })
+                    navigate('accessInfo')
+                } else {
+                    reject(err)
+                }
+            }
+        })
+    })
 }
 
 export const userSignIn = (formInputs) => (dispatch, getState) => {
@@ -123,7 +187,7 @@ export const userSignIn = (formInputs) => (dispatch, getState) => {
             Password: formInputs.password,
         });
 
-        const cognitoUser = getCognitoUser(reject, getState, formInputs && formInputs.email)
+        const cognitoUser = getCognitoUser(reject, getState, formInputs.email)
 
         cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: function (result) {

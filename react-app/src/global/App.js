@@ -12,9 +12,13 @@ import Footer from './partials/footer'
 import Home from '../container/home'
 import Login from '../container/login'
 import Register from '../container/register'
+import Access from '../container/access'
+import AccessInfo from '../container/access-info'
 import UserConfrimation from '../container/user-confirmation'
 
 const publicRoutes = [
+    '/access',
+    '/access-info',
     '/login',
     '/register',
     '/user-confirmation'
@@ -24,7 +28,7 @@ const getRoutes = (store, closeDrawer) => {
     const requireAuth = (nextState, replace) => {
         if (!store.getState().app.getIn(['authenticated']) && publicRoutes.indexOf(nextState.location.pathname) === -1) {
             replace({
-                pathname: '/login',
+                pathname: '/access',
                 state: { nextPathname: nextState.location.pathname }
             })
         }
@@ -33,6 +37,8 @@ const getRoutes = (store, closeDrawer) => {
     return (
          <Router history={browserHistory} onUpdate={closeDrawer}>
             <Route path="/" component={Home} onEnter={requireAuth} />
+            <Route path="access" component={Access} />
+             <Route path="access-info" component={AccessInfo} />
             <Route path="login" component={Login} />
             <Route path="register" component={Register} />
             <Route path="user-confirmation" component={UserConfrimation} />
