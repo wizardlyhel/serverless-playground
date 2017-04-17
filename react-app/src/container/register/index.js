@@ -8,7 +8,7 @@ import {
 } from 'redux-form-material-ui'
 import * as formValidationRules from '../../utils/form-validation'
 
-import { signUp } from '../../global/actions/'
+import { signUp } from '../../global/actions/app/'
 
 class Register extends Component {
     render() {

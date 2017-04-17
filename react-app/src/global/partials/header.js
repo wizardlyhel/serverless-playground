@@ -6,7 +6,7 @@ import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 
-import { setDrawerState, signOut } from '../../global/actions/'
+import { setDrawerState, signOut } from '../../global/actions/app/'
 
 class Header extends Component {
     handleTitleClick = () => {

@@ -12,7 +12,7 @@ import {
 } from 'redux-form-material-ui'
 import * as formValidationRules from '../../utils/form-validation'
 
-import { guestSignUp } from '../../global/actions/'
+import { guestSignUp } from '../../global/actions/app/'
 
 const formIdentifier = 'access'
 

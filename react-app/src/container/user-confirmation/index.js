@@ -8,7 +8,7 @@ import {
 } from 'redux-form-material-ui'
 import * as formValidationRules from '../../utils/form-validation'
 
-import { signUpConfirm, resendConfirmation } from '../../global/actions/'
+import { signUpConfirm, resendConfirmation } from '../../global/actions/app/'
 
 class UserConfirmation extends Component {
     constructor(props) {

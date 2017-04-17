@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import {connect} from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 
-import { setDrawerState, restoreUserSession } from './actions/'
+import { setDrawerState, restoreUserSession } from './actions/app/'
 
 import Stylesheet from './style/stylesheet.scss'    // eslint-disable-line no-unused-vars
 

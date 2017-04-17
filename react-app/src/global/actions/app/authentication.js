@@ -7,7 +7,7 @@ import {
     CognitoUser
 } from "amazon-cognito-identity-js";
 
-import { signIn } from '../../global/actions/'
+import { signIn } from './'
 
 const navigate = (page) => {
     switch(page) {

@@ -9,7 +9,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import { TextField } from 'redux-form-material-ui'
 import * as formValidationRules from '../../utils/form-validation'
 
-import { signIn } from '../../global/actions/'
+import { signIn } from '../../global/actions/app/'
 
 class Login extends Component {
     render() {

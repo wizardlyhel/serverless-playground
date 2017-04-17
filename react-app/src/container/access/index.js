@@ -8,7 +8,7 @@ import {
 } from 'redux-form-material-ui'
 import * as formValidationRules from '../../utils/form-validation'
 
-import { guestSignIn } from '../../global/actions/'
+import { guestSignIn } from '../../global/actions/app/'
 
 class Access extends Component {
     render() {

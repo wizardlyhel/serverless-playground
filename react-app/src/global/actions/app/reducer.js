@@ -1,8 +1,8 @@
-import { createReducersMap, createDefaultReducers } from '../utils/action-promise-redux/reducerMap'
-import { handleError, createErrorPayload } from '../utils/errors';
+import { createReducersMap, createDefaultReducers } from '../../../utils/action-promise-redux/reducerMap'
+import { handleError, createErrorPayload } from '../../../utils/errors';
 import * as Immutable from 'immutable'
 
-import * as appActions from './actions/'
+import * as appActions from './'
 
 const drawerIsOpen = 'drawerIsOpen'
 const authenticated = 'authenticated'

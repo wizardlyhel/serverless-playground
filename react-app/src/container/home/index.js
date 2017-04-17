@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux'
+
+import { fetchResource } from '../../global/actions/resource/'
 
 class Home extends Component {
+    componentDidMount() {
+        this.props.fetchPage('index.html')
+    }
+
     render() {
         return (
         	<div>
@@ -10,4 +17,19 @@ class Home extends Component {
     }
 }
 
-export default Home;
+export const mapStateToProps = (state, props) => {
+    return {
+        intl: state.intl
+    }
+}
+
+export const mapDispatchToProps = (dispatch, props) => {
+    return {
+        fetchPage: (path) => dispatch(fetchResource(path))
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Home)

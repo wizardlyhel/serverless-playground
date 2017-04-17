@@ -1,4 +1,4 @@
-import { createAction, createPromisedAction } from '../../utils/action-promise-redux/createAction';
+import { createAction, createPromisedAction } from '../../../utils/action-promise-redux/createAction';
 import {
     getUserSession,
     userSignUp,
@@ -10,10 +10,6 @@ import {
     userSignOut
 } from './authentication'
 
-import {
-    fetchS3Resource
-} from './resource'
-
 export const setDrawerState = createAction('Set drawer state')
 
 export const restoreUserSession = createPromisedAction('Restore user session', getUserSession)
@@ -24,5 +20,3 @@ export const resendConfirmation = createPromisedAction('Resend confirmation code
 export const guestSignIn = createPromisedAction('Guest sign in', guestUserSignIn)
 export const signIn = createPromisedAction('Sign in', userSignIn)
 export const signOut = createPromisedAction('Sign out', userSignOut)
-
-export const fetchResource = createPromisedAction('Fetch Resource', fetchS3Resource)
