@@ -73,12 +73,15 @@ const getCognitoUser = (reject, getState, email) => {
 
 const storeUserSession = (token) => {
     // Store access token
-    Config.credentials = new CognitoIdentityCredentials({
-        IdentityPoolId : config.IdentityPoolId,
-        Logins : {
-            [`cognito-idp.${config.region}.amazonaws.com/${config.UserPoolId}`]: token
-        }
-    });
+    window.AWS.config.update({
+        credentials: new CognitoIdentityCredentials({
+            IdentityPoolId : config.IdentityPoolId,
+            Logins : {
+                [`cognito-idp.${config.region}.amazonaws.com/${config.UserPoolId}`]: token
+            }
+        }),
+        region: config.region
+    })
 }
 
 export const userSignUp = (formInputs) => {
@@ -162,7 +165,7 @@ export const guestUserSignIn = (formInputs) => (dispatch, getState) => {
 
         cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: function (result) {
-                storeUserSession(result.getAccessToken().getJwtToken())
+                storeUserSession(result.getIdToken().getJwtToken())
                 resolve(cognitoUser.getUsername())
             },
             onFailure: function (err) {
@@ -191,7 +194,7 @@ export const userSignIn = (formInputs) => (dispatch, getState) => {
 
         cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: function (result) {
-                storeUserSession(result.getAccessToken().getJwtToken())
+                storeUserSession(result.getIdToken().getJwtToken())
                 resolve(cognitoUser.getUsername())
             },
             onFailure: reject

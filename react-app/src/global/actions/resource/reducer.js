@@ -3,7 +3,7 @@ import * as Immutable from 'immutable'
 
 import * as actions from './'
 
-const resource = './resource'
+const resource = 'resource'
 
 const initialState = Immutable.fromJS({})
 

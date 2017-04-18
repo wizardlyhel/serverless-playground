@@ -26,10 +26,6 @@ class UserConfirmation extends Component {
         }
     }
 
-    componentWillMount() {
-
-    }
-
     render() {
         const {
             intl,

@@ -1,25 +1,62 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux'
 
 import { fetchResource } from '../../global/actions/resource/'
 
 class Home extends Component {
     componentDidMount() {
-        this.props.fetchPage('index.html')
+        if (this.props.authenticated) {
+            this.props.fetchPage('index.html')
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        // Navigate to root when authenticated
+        if (this.props.authenticated !== nextProps.authenticated && nextProps.authenticated) {
+            this.props.fetchPage('index.html')
+        }
+    }
+
+    createMarkup(content) {
+        return {
+            __html: content
+        }
     }
 
     render() {
+        const {
+            pageContent
+        } = this.props
         return (
-        	<div>
-	            <p>Aventine is a financial services business that builds connections across international frontiers and creates exciting opportunities for its investors.</p>
+            <div>
+            { !pageContent && 
+                <p>Aventine is a financial services business that builds connections across international frontiers and creates exciting opportunities for its investors.</p>
+            }
+            { pageContent &&
+                <div dangerouslySetInnerHTML={this.createMarkup(pageContent)} />
+            }
             </div>
         );
     }
 }
 
+Home.propTypes = {
+    /**
+     * react-intl
+     */
+    intl: PropTypes.object.isRequired,
+    pageContent: PropTypes.string,
+    /**
+     *  Resource fetch function
+     */
+    fetchPage: PropTypes.func
+}
+
 export const mapStateToProps = (state, props) => {
     return {
-        intl: state.intl
+        intl: state.intl,
+        pageContent: state.resource.getIn(['index.html']),
+        authenticated: state.app.getIn(['authenticated'])
     }
 }
 
