@@ -2,6 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux'
 
 import { fetchResource } from '../../global/actions/resource/'
+import { convertS3ResourcesInHTML } from '../../global/actions/resource/resource-utils'
+
+let s3Html = null
 
 class Home extends Component {
     componentDidMount() {
@@ -17,10 +20,12 @@ class Home extends Component {
         }
     }
 
+    componentDidUpdate() {
+        convertS3ResourcesInHTML(s3Html)
+    }
+
     createMarkup(content) {
-        return {
-            __html: content
-        }
+        return {__html: content}
     }
 
     render() {
@@ -33,7 +38,7 @@ class Home extends Component {
                 <p>Aventine is a financial services business that builds connections across international frontiers and creates exciting opportunities for its investors.</p>
             }
             { pageContent &&
-                <div dangerouslySetInnerHTML={this.createMarkup(pageContent)} />
+                <div ref={(html) => {s3Html = html}} dangerouslySetInnerHTML={this.createMarkup(pageContent)} />
             }
             </div>
         );
