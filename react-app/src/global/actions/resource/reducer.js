@@ -9,7 +9,10 @@ const initialState = Immutable.fromJS({})
 
 export default createReducersMap([
     {
-        actionsMap: [actions.fetchResource.success],
+        actionsMap: [
+            actions.fetchResource.success,
+            actions.updateResource
+        ],
         handler: {
             reducer: resource
         }

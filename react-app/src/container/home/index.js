@@ -1,31 +1,39 @@
 import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux'
 
-import { fetchResource } from '../../global/actions/resource/'
-import { convertS3ResourcesInHTML } from '../../global/actions/resource/resource-utils'
+import { fetchResource, updateResource } from '../../global/actions/resource/'
+
 
 let s3Html = null
+
+const getPath = () => {
+    return location.pathname !== '/' ? location.pathname : 'index.html'
+}
+
+const disableSrc = (html) => {
+    return html.replace(/\ssrc/g, ' x-src')
+}
 
 class Home extends Component {
     componentDidMount() {
         if (this.props.authenticated) {
-            this.props.fetchPage('index.html')
+            this.props.fetchPage(getPath())
         }
     }
 
     componentWillReceiveProps(nextProps) {
         // Navigate to root when authenticated
         if (this.props.authenticated !== nextProps.authenticated && nextProps.authenticated) {
-            this.props.fetchPage('index.html')
+            this.props.fetchPage(getPath())
         }
     }
 
     componentDidUpdate() {
-        convertS3ResourcesInHTML(s3Html)
+        this.props.updatePage(getPath(), s3Html)
     }
 
     createMarkup(content) {
-        return {__html: content}
+        return {__html: disableSrc(content)}
     }
 
     render() {
@@ -60,14 +68,15 @@ Home.propTypes = {
 export const mapStateToProps = (state, props) => {
     return {
         intl: state.intl,
-        pageContent: state.resource.getIn(['index.html']),
+        pageContent: state.resource.getIn([getPath()]),
         authenticated: state.app.getIn(['authenticated'])
     }
 }
 
 export const mapDispatchToProps = (dispatch, props) => {
     return {
-        fetchPage: (path) => dispatch(fetchResource(path))
+        fetchPage: (path) => dispatch(fetchResource(path)),
+        updatePage: (url, page) => dispatch(updateResource(url, page))
     }
 }
 

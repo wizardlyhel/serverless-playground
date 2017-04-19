@@ -1,4 +1,5 @@
 node_modules
+resource
 .next
 .DS_Store
 npm-debug.log
