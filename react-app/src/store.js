@@ -29,7 +29,7 @@ let store = createStore(
     rootReducer,
     initialState,
     composeEnhancers(
-        applyMiddleware(actionPromiseReduxMiddleware, logger)
+        applyMiddleware(actionPromiseReduxMiddleware, thunk, logger)
     )
 )
 

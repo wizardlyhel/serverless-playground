@@ -5,6 +5,7 @@ import * as Immutable from 'immutable'
 import * as appActions from './'
 
 const drawerIsOpen = 'drawerIsOpen'
+const showTerms = 'showTerms'
 const authenticated = 'authenticated'
 const isGuest = 'isGuest'
 const formErrors = 'formErrors'
@@ -14,6 +15,7 @@ const initialState = Immutable.fromJS({
     [authenticated]: false,
     [isGuest]: false,
     [drawerIsOpen]: false,
+    [showTerms]: true,
     [formErrors]: {},
     [username]: false
 })
@@ -23,6 +25,21 @@ export default createReducersMap([
         actionsMap: [appActions.setDrawerState],
         handler: {
             reducer: drawerIsOpen
+        }
+    },
+    {
+        actionsMap: [
+            appActions.signOut.success,
+            appActions.showTerms
+        ],
+        handler: {
+            reducer: showTerms,
+            payloadTransform: (type, payload) => {
+                if (type === appActions.signOut.success) {
+                    return false
+                }
+                return payload
+            }
         }
     },
     {
@@ -126,7 +143,7 @@ export default createReducersMap([
         }
     }
 ],{
-    ...createDefaultReducers(authenticated, drawerIsOpen, username, isGuest),
+    ...createDefaultReducers(authenticated, showTerms, drawerIsOpen, username, isGuest),
     formErrors: (state, payload) => {
         return handleError(state, payload)
     }

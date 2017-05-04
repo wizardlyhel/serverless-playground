@@ -7,8 +7,8 @@
 // import {fade} from '../../utils/colorManipulator';
 // import spacing from '../spacing';
 
-const primaryColor = '#0C203F'
-const secondaryColor = '#f7931d'
+const primaryColor = '#000F4D'
+const secondaryColor = '#0399c6'
 
 export default {
     userAgent: window.navigator.userAgent,

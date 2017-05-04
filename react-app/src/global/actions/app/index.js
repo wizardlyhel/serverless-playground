@@ -11,6 +11,7 @@ import {
 } from './authentication'
 
 export const setDrawerState = createAction('Set drawer state')
+export const showTerms = createAction('Show terms of agreement')
 
 export const restoreUserSession = createPromisedAction('Restore user session', getUserSession)
 export const signUp = createPromisedAction('Sign up', userSignUp)

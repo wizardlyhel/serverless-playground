@@ -1,8 +1,13 @@
 import React, { Component, PropTypes } from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 
-import { setDrawerState, restoreUserSession } from './actions/app/'
+import {
+    setDrawerState,
+    showTerms,
+    restoreUserSession,
+    signOut
+} from './actions/app/'
 
 import Stylesheet from './style/stylesheet.scss'    // eslint-disable-line no-unused-vars
 
@@ -15,6 +20,14 @@ import Register from '../container/register'
 import Access from '../container/access'
 import AccessInfo from '../container/access-info'
 import UserConfrimation from '../container/user-confirmation'
+
+import Dialog from 'material-ui/Dialog'
+import RaisedButton from 'material-ui/RaisedButton'
+
+const customContentStyle = {
+    width: '95%',
+    height: '100%'
+}
 
 const publicRoutes = [
     '/access',
@@ -38,7 +51,7 @@ const getRoutes = (store, closeDrawer) => {
          <Router history={browserHistory} onUpdate={closeDrawer}>
             <Route path="/" component={Home} onEnter={requireAuth} />
             <Route path="access" component={Access} />
-             <Route path="access-info" component={AccessInfo} />
+            <Route path="access-info" component={AccessInfo} />
             <Route path="login" component={Login} />
             <Route path="register" component={Register} />
             <Route path="user-confirmation" component={UserConfrimation} />
@@ -60,11 +73,45 @@ class App extends Component {
 
     render() {
         const {
+            authenticated,
             intl,
             appError,
             closeDrawer,
-            store
+            store,
+            showTerms,
+            acceptTerms,
+            declineTerms
         } = this.props
+
+        const actions = [
+            <div>
+                <div className="pure-u-1">
+                    <p className="u-padding u-text-align-center u-text-bold u-margin-0">{intl.messages['terms.acceptance']}</p>
+                </div>
+                <div className="pure-u-1">
+                    <div className="pure-u-md-7-24"></div>
+                    <div className="pure-u-sm-1 pure-u-md-1-6">
+                        <RaisedButton
+                            label={intl.messages['button.cancel']}
+                            primary={false}
+                            fullWidth={true}
+                            onTouchTap={declineTerms}
+                            className="u-margin-end-md"
+                        />
+                    </div>
+                    <div className="pure-u-md-2-24"></div>
+                    <div className="pure-u-sm-1 pure-u-md-1-6">
+                        <RaisedButton
+                            label={intl.messages['button.agree']}
+                            secondary={true}
+                            fullWidth={true}
+                            onTouchTap={acceptTerms}
+                        />
+                    </div>
+                    <div className="pure-u-md-7-24"></div>
+                </div>
+            </div>
+        ]
         
         return (
             <div className="pure-g">
@@ -75,6 +122,24 @@ class App extends Component {
                     }
                     { getRoutes(store, closeDrawer) }
                 </div>
+                {authenticated &&
+                    <Dialog
+                        className="c-modal"
+                        contentClassName="c-modal__wrapper"
+                        bodyClassName="c-modal__content"
+                        modal={true}
+                        open={showTerms}
+                        contentStyle={customContentStyle}
+                        actions={actions}
+                        actionsContainerClassName="c-modal__footer"
+                        title={intl.messages['modal.disclaimer']}
+                        titleClassName="c-modal__header u-text-align-center"
+                        autoScrollBodyContent={true}
+                        repositionOnUpdate={false}
+                    >
+                        <iframe width="100%" height="300px" className="c-modal__iframe" src="/pages/en/terms.html" />
+                    </Dialog>
+                }
                 <Footer />
             </div>
         )
@@ -96,14 +161,22 @@ export const mapStateToProps = (state, props) => {
     return {
         intl: state.intl,
         appError: appError ? appError : undefined,
-        authenticated: state.app.getIn(['authenticated'])
+        authenticated: state.app.getIn(['authenticated']),
+        showTerms: state.app.getIn(['showTerms'])
     }
 }
 
 export const mapDispatchToProps = (dispatch, props) => {
     return {
         restoreSession: () => dispatch(restoreUserSession()),
-        closeDrawer: () => dispatch(setDrawerState(false))
+        closeDrawer: () => dispatch(setDrawerState(false)),
+        acceptTerms: () => {
+            dispatch(showTerms(false))
+        },
+        declineTerms: () => {
+            dispatch(signOut())
+            dispatch(showTerms(false))
+        }
     }
 }
 

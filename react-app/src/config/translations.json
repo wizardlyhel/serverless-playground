@@ -23,6 +23,13 @@
 		"auth.confirmationCode": "Confirmation Code",
 		"auth.confirmationButton": "Submit",
 
+		"terms.acceptance": "Please indicate your acceptance of this disclaimer to continue to our website",
+
+		"button.agree": "I Agree",
+		"button.cancel": "Cancel",
+
+		"modal.disclaimer": "WEBSITE DISCLAIMER",
+
 		"formValidation.required": "Required",
 		"formValidation.minLength": "Must be at least ${min} characters",
 		"formValidation.uppercase": "Must have at least 1 uppercase character",
@@ -40,7 +47,6 @@
 		"awsError.codeExpired": "Your confirmation code expired. Please request another one.",
 		"awsError.requestConfirmationCodeButton": "Send new confirmation code",
 		"awsError.codeMismatch": "Invalid verification code provided, please try again."
-
 	},
 	"zh-cn": {
 		"companyName": "Obelisk Global"

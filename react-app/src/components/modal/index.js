@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react'
 import {connect} from 'react-redux'
-import classNames from 'classnames'
 
 import Dialog from 'material-ui/Dialog'
 
@@ -9,20 +8,23 @@ const customContentStyle = {
     maxWidth: '400px'
 }
 
-class Login extends Component {
+class Modal extends Component {
     render() {
         const {
             children,
             isModal,
-            isOpen
+            isOpen,
+            handleClose,
+            actions
         } = this.props
 
         return (
             <Dialog
-                modal={false}
-                open={true}
+                modal={isModal}
+                open={isOpen}
                 contentStyle={customContentStyle}
-                onRequestClose={this.handleClose}
+                onRequestClose={handleClose}
+                actions={actions}
             >
                 {children}
             </Dialog>
@@ -30,16 +32,18 @@ class Login extends Component {
     }
 }
 
-Login.defaultProps = {
+Modal.defaultProps = {
     isModal: false,
     isOpen: true
 }
 
-Login.propTypes = {
+Modal.propTypes = {
     children: PropTypes.node,
     intl: PropTypes.object,
     isModal: PropTypes.bool,
-    isOpen: PropTypes.bool
+    isOpen: PropTypes.bool,
+    handleClose: PropTypes.func,
+    actions: PropTypes.object
 }
 
 export const mapStateToProps = (state, props) => {
@@ -50,4 +54,4 @@ export const mapStateToProps = (state, props) => {
 
 export default connect(
     mapStateToProps
-)(Login)
+)(Modal)

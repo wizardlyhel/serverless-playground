@@ -1,30 +1,30 @@
 import omit from 'lodash.omit';
-// Stripped down version of https://github.com/lelandrichardson/redux-pack/blob/master/src/middleware.js
+
+const META_NAME = 'redux-promise-action'
+
 const handlePromise = (dispatch, getState, action) => {
     const { type, payload, meta } = action;
-    const error = payload instanceof Error ? true : undefined
 
     if (typeof payload === 'function') {
+        const newMeta = omit(meta, META_NAME)
+        dispatch({
+            type: `${type}|start`,
+            payload: null,
+            meta: newMeta
+        })
+
         let resultPayload = payload(dispatch, getState)
+
+        // Handle thunked promise
         while (typeof resultPayload === 'function' && !resultPayload.then) {
           resultPayload = resultPayload(dispatch, getState);
         }
 
-        const newMeta = omit(meta, 'action-promise-redux')
-
-        if (resultPayload.then) {
-            dispatch({
-                type: `${type}|start`,
-                payload: null,
-                error,
-                meta: newMeta
-            })
-            
+        if (resultPayload.then) {            
             const success = data => {
                 dispatch({
                     type: `${type}|success`,
                     payload: data,
-                    error,
                     meta: newMeta
                 })
             }
@@ -33,7 +33,7 @@ const handlePromise = (dispatch, getState, action) => {
                 dispatch({
                     type: `${type}|failed`,
                     payload: error,
-                    error,
+                    error: true,
                     meta: newMeta
                 })
             }
@@ -46,23 +46,9 @@ const handlePromise = (dispatch, getState, action) => {
 }
 
 export const middleware = ({ dispatch, getState }) => next => action => {
-    // a common use case for redux-thunk is to conditionally dispatch an action. By allowing for null,
-    // we satisfy this use case without people having to use redux-thunk.
-    if (action == null) {
-        return null;
-    }
-
-    // this is the convention-based promise middleware. Ideally, all "async actions" would go through
-    // this pathway.
-    if (action.meta && action.meta['action-promise-redux'] && action.meta['action-promise-redux'].type === 'promise') {
+    if (action.meta && action.meta[META_NAME] && action.meta[META_NAME].type === 'promise') {
         return handlePromise(dispatch, getState, action);
     }
 
-    // react-thunk path
-    if (typeof action === 'function') {
-      return action(dispatch, getState);
-    }
-
-    // this is the "vanilla redux" pathway. These are plain old actions that will get sent to reducers
     return next(action);
 };

@@ -1,7 +1,5 @@
 // Modified version of https://github.com/acdlite/redux-actions/blob/master/src/createAction.js
 import isFunction from 'lodash/isFunction';
-import isUndefined from 'lodash/isUndefined';
-import invariant from 'invariant';
 
 export function createAction(type, payloadCreator, metaCreator) {
     const actionCreator = (...args) => {
@@ -33,7 +31,7 @@ export function createPromisedAction(type, promise, metaCreator) {
             type,
             payload: promise.bind(this, ...args),
             meta: {
-                'action-promise-redux': {
+                'redux-promise-action': {
                     type: 'promise'
                 }
             }
